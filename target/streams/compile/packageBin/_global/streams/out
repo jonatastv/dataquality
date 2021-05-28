@@ -1,0 +1,27 @@
+[debug] Packaging C:\Users\jtvieira\workspace\dataquality\target\scala-2.10\dataquality_2.10-0.1.jar ...
+[debug] Input file mappings:
+[debug] 	br
+[debug] 	  C:\Users\jtvieira\workspace\dataquality\target\scala-2.10\classes\br
+[debug] 	br\com
+[debug] 	  C:\Users\jtvieira\workspace\dataquality\target\scala-2.10\classes\br\com
+[debug] 	br\com\vivo
+[debug] 	  C:\Users\jtvieira\workspace\dataquality\target\scala-2.10\classes\br\com\vivo
+[debug] 	br\com\vivo\dataquality
+[debug] 	  C:\Users\jtvieira\workspace\dataquality\target\scala-2.10\classes\br\com\vivo\dataquality
+[debug] 	br\com\vivo\dataquality\duplicidade
+[debug] 	  C:\Users\jtvieira\workspace\dataquality\target\scala-2.10\classes\br\com\vivo\dataquality\duplicidade
+[debug] 	br\com\vivo\dataquality\duplicidade\ColetaDuplicidade$.class
+[debug] 	  C:\Users\jtvieira\workspace\dataquality\target\scala-2.10\classes\br\com\vivo\dataquality\duplicidade\ColetaDuplicidade$.class
+[debug] 	br\com\vivo\dataquality\duplicidade\ColetaDuplicidade$delayedInit$body.class
+[debug] 	  C:\Users\jtvieira\workspace\dataquality\target\scala-2.10\classes\br\com\vivo\dataquality\duplicidade\ColetaDuplicidade$delayedInit$body.class
+[debug] 	br\com\vivo\dataquality\duplicidade\ColetaDuplicidade.class
+[debug] 	  C:\Users\jtvieira\workspace\dataquality\target\scala-2.10\classes\br\com\vivo\dataquality\duplicidade\ColetaDuplicidade.class
+[debug] 	br\com\vivo\dataquality\volumetria
+[debug] 	  C:\Users\jtvieira\workspace\dataquality\target\scala-2.10\classes\br\com\vivo\dataquality\volumetria
+[debug] 	br\com\vivo\dataquality\volumetria\ColetaVolumetria$.class
+[debug] 	  C:\Users\jtvieira\workspace\dataquality\target\scala-2.10\classes\br\com\vivo\dataquality\volumetria\ColetaVolumetria$.class
+[debug] 	br\com\vivo\dataquality\volumetria\ColetaVolumetria$delayedInit$body.class
+[debug] 	  C:\Users\jtvieira\workspace\dataquality\target\scala-2.10\classes\br\com\vivo\dataquality\volumetria\ColetaVolumetria$delayedInit$body.class
+[debug] 	br\com\vivo\dataquality\volumetria\ColetaVolumetria.class
+[debug] 	  C:\Users\jtvieira\workspace\dataquality\target\scala-2.10\classes\br\com\vivo\dataquality\volumetria\ColetaVolumetria.class
+[debug] Done packaging.

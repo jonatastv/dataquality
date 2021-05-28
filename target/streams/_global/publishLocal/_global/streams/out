@@ -1,0 +1,55 @@
+[info] :: delivering :: default#dataquality_2.10;0.1 :: 0.1 :: release :: Fri May 28 14:44:51 BRT 2021
+[debug] 	options = status=release pubdate=Fri May 28 14:44:51 BRT 2021 validate=true resolveDynamicRevisions=true merge=true resolveId=null pubBranch=null
+[info] 	delivering ivy file to C:\Users\jtvieira\workspace\dataquality\target\scala-2.10\ivy-0.1.xml
+[debug] 	deliver done (35ms)
+[debug] local do not support transaction. ivy pattern does not use revision as a directory
+[debug] C:\Users\jtvieira\.ivy2\local\default\dataquality_2.10\0.1\poms\dataquality_2.10.pom already exists, nothing done
+[warn] Attempting to overwrite C:\Users\jtvieira\.ivy2\local\default\dataquality_2.10\0.1\poms\dataquality_2.10.pom (non-SNAPSHOT)
+[warn] 	You need to remove it from the cache manually to take effect.
+[debug] C:\Users\jtvieira\.ivy2\local\default\dataquality_2.10\0.1\poms\dataquality_2.10.pom.sha1 already exists, nothing done
+[warn] Attempting to overwrite C:\Users\jtvieira\.ivy2\local\default\dataquality_2.10\0.1\poms\dataquality_2.10.pom.sha1 (non-SNAPSHOT)
+[warn] 	You need to remove it from the cache manually to take effect.
+[debug] C:\Users\jtvieira\.ivy2\local\default\dataquality_2.10\0.1\poms\dataquality_2.10.pom.md5 already exists, nothing done
+[warn] Attempting to overwrite C:\Users\jtvieira\.ivy2\local\default\dataquality_2.10\0.1\poms\dataquality_2.10.pom.md5 (non-SNAPSHOT)
+[warn] 	You need to remove it from the cache manually to take effect.
+[info] 	published dataquality_2.10 to C:\Users\jtvieira\.ivy2\local\default\dataquality_2.10\0.1\poms\dataquality_2.10.pom
+[debug] C:\Users\jtvieira\.ivy2\local\default\dataquality_2.10\0.1\jars\dataquality_2.10.jar already exists, nothing done
+[warn] Attempting to overwrite C:\Users\jtvieira\.ivy2\local\default\dataquality_2.10\0.1\jars\dataquality_2.10.jar (non-SNAPSHOT)
+[warn] 	You need to remove it from the cache manually to take effect.
+[debug] C:\Users\jtvieira\.ivy2\local\default\dataquality_2.10\0.1\jars\dataquality_2.10.jar.sha1 already exists, nothing done
+[warn] Attempting to overwrite C:\Users\jtvieira\.ivy2\local\default\dataquality_2.10\0.1\jars\dataquality_2.10.jar.sha1 (non-SNAPSHOT)
+[warn] 	You need to remove it from the cache manually to take effect.
+[debug] C:\Users\jtvieira\.ivy2\local\default\dataquality_2.10\0.1\jars\dataquality_2.10.jar.md5 already exists, nothing done
+[warn] Attempting to overwrite C:\Users\jtvieira\.ivy2\local\default\dataquality_2.10\0.1\jars\dataquality_2.10.jar.md5 (non-SNAPSHOT)
+[warn] 	You need to remove it from the cache manually to take effect.
+[info] 	published dataquality_2.10 to C:\Users\jtvieira\.ivy2\local\default\dataquality_2.10\0.1\jars\dataquality_2.10.jar
+[debug] C:\Users\jtvieira\.ivy2\local\default\dataquality_2.10\0.1\srcs\dataquality_2.10-sources.jar already exists, nothing done
+[warn] Attempting to overwrite C:\Users\jtvieira\.ivy2\local\default\dataquality_2.10\0.1\srcs\dataquality_2.10-sources.jar (non-SNAPSHOT)
+[warn] 	You need to remove it from the cache manually to take effect.
+[debug] C:\Users\jtvieira\.ivy2\local\default\dataquality_2.10\0.1\srcs\dataquality_2.10-sources.jar.sha1 already exists, nothing done
+[warn] Attempting to overwrite C:\Users\jtvieira\.ivy2\local\default\dataquality_2.10\0.1\srcs\dataquality_2.10-sources.jar.sha1 (non-SNAPSHOT)
+[warn] 	You need to remove it from the cache manually to take effect.
+[debug] C:\Users\jtvieira\.ivy2\local\default\dataquality_2.10\0.1\srcs\dataquality_2.10-sources.jar.md5 already exists, nothing done
+[warn] Attempting to overwrite C:\Users\jtvieira\.ivy2\local\default\dataquality_2.10\0.1\srcs\dataquality_2.10-sources.jar.md5 (non-SNAPSHOT)
+[warn] 	You need to remove it from the cache manually to take effect.
+[info] 	published dataquality_2.10 to C:\Users\jtvieira\.ivy2\local\default\dataquality_2.10\0.1\srcs\dataquality_2.10-sources.jar
+[debug] C:\Users\jtvieira\.ivy2\local\default\dataquality_2.10\0.1\docs\dataquality_2.10-javadoc.jar already exists, nothing done
+[warn] Attempting to overwrite C:\Users\jtvieira\.ivy2\local\default\dataquality_2.10\0.1\docs\dataquality_2.10-javadoc.jar (non-SNAPSHOT)
+[warn] 	You need to remove it from the cache manually to take effect.
+[debug] C:\Users\jtvieira\.ivy2\local\default\dataquality_2.10\0.1\docs\dataquality_2.10-javadoc.jar.sha1 already exists, nothing done
+[warn] Attempting to overwrite C:\Users\jtvieira\.ivy2\local\default\dataquality_2.10\0.1\docs\dataquality_2.10-javadoc.jar.sha1 (non-SNAPSHOT)
+[warn] 	You need to remove it from the cache manually to take effect.
+[debug] C:\Users\jtvieira\.ivy2\local\default\dataquality_2.10\0.1\docs\dataquality_2.10-javadoc.jar.md5 already exists, nothing done
+[warn] Attempting to overwrite C:\Users\jtvieira\.ivy2\local\default\dataquality_2.10\0.1\docs\dataquality_2.10-javadoc.jar.md5 (non-SNAPSHOT)
+[warn] 	You need to remove it from the cache manually to take effect.
+[info] 	published dataquality_2.10 to C:\Users\jtvieira\.ivy2\local\default\dataquality_2.10\0.1\docs\dataquality_2.10-javadoc.jar
+[debug] C:\Users\jtvieira\.ivy2\local\default\dataquality_2.10\0.1\ivys\ivy.xml already exists, nothing done
+[warn] Attempting to overwrite C:\Users\jtvieira\.ivy2\local\default\dataquality_2.10\0.1\ivys\ivy.xml (non-SNAPSHOT)
+[warn] 	You need to remove it from the cache manually to take effect.
+[debug] C:\Users\jtvieira\.ivy2\local\default\dataquality_2.10\0.1\ivys\ivy.xml.sha1 already exists, nothing done
+[warn] Attempting to overwrite C:\Users\jtvieira\.ivy2\local\default\dataquality_2.10\0.1\ivys\ivy.xml.sha1 (non-SNAPSHOT)
+[warn] 	You need to remove it from the cache manually to take effect.
+[debug] C:\Users\jtvieira\.ivy2\local\default\dataquality_2.10\0.1\ivys\ivy.xml.md5 already exists, nothing done
+[warn] Attempting to overwrite C:\Users\jtvieira\.ivy2\local\default\dataquality_2.10\0.1\ivys\ivy.xml.md5 (non-SNAPSHOT)
+[warn] 	You need to remove it from the cache manually to take effect.
+[info] 	published ivy to C:\Users\jtvieira\.ivy2\local\default\dataquality_2.10\0.1\ivys\ivy.xml

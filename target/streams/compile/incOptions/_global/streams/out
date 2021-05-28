@@ -1,0 +1,14 @@
+[debug] Created transactional ClassFileManager with tempDir = C:\Users\jtvieira\workspace\dataquality\target\scala-2.10\classes.bak
+[debug] About to delete class files:
+[debug] 	ColetaDuplicidade.class
+[debug] 	ColetaDuplicidade$delayedInit$body.class
+[debug] 	ColetaDuplicidade$.class
+[debug] We backup class files:
+[debug] 	ColetaDuplicidade.class
+[debug] 	ColetaDuplicidade$delayedInit$body.class
+[debug] 	ColetaDuplicidade$.class
+[debug] Registering generated classes:
+[debug] 	ColetaDuplicidade.class
+[debug] 	ColetaDuplicidade$delayedInit$body.class
+[debug] 	ColetaDuplicidade$.class
+[debug] Removing the temporary directory used for backing up class files: C:\Users\jtvieira\workspace\dataquality\target\scala-2.10\classes.bak

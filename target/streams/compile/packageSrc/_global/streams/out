@@ -1,0 +1,7 @@
+[debug] Packaging C:\Users\jtvieira\workspace\dataquality\target\scala-2.10\dataquality_2.10-0.1-sources.jar ...
+[debug] Input file mappings:
+[debug] 	br\com\vivo\dataquality\duplicidade\ColetaDuplicidade.scala
+[debug] 	  C:\Users\jtvieira\workspace\dataquality\src\main\scala\br\com\vivo\dataquality\duplicidade\ColetaDuplicidade.scala
+[debug] 	br\com\vivo\dataquality\volumetria\ColetaVolumetria.scala
+[debug] 	  C:\Users\jtvieira\workspace\dataquality\src\main\scala\br\com\vivo\dataquality\volumetria\ColetaVolumetria.scala
+[debug] Done packaging.

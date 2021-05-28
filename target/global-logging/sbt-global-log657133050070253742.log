@@ -1,0 +1,151 @@
+[debug] > Exec(early(addDefaultCommands), None, None)
+[debug] > Exec(addDefaultCommands, None, None)
+[debug] > Exec(early(initialize), None, None)
+[debug] > Exec(initialize, None, None)
+[debug] > Exec(early(addPluginSbtFile="""C:\Users\jtvieira\AppData\Local\Temp\idea.sbt"""), None, None)
+[debug] > Exec(addPluginSbtFile="""C:\Users\jtvieira\AppData\Local\Temp\idea.sbt""", None, None)
+[debug] > Exec(boot, None, None)
+[debug] > Exec(writeSbtVersion, None, None)
+[debug] > Exec(reload, None, None)
+[debug] > Exec(sbtStashOnFailure, None, None)
+[debug] > Exec(onFailure loadFailed, None, None)
+[debug] > Exec(loadp, None, None)
+[info] welcome to sbt 1.5.2 (Oracle Corporation Java 1.8.0_231)
+[debug]       Load.loadUnit: plugins took 112.4292ms
+[debug]       Load.loadUnit: defsScala took 0.3545ms
+[debug] [Loading] Scanning directory C:\Users\jtvieira\.sbt\1.0\plugins
+[debug] [Loading] Found non-root projects 
+[debug] [Loading] Done in C:\Users\jtvieira\.sbt\1.0\plugins, returning: ()
+[debug] deducing auto plugins based on known facts Set(Atom(sbt.plugins.CorePlugin)) and clauses Clauses(Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.IvyPlugin)))
+[debug] Clause(Atom(sbt.ScriptedPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.SbtPlugin),Set(Atom(sbt.ScriptedPlugin)))
+[debug] Clause(Atom(sbt.plugins.SemanticdbPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.JUnitXmlReportPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.MiniDependencyTreePlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.CorePlugin),Set(Atom(sbt.plugins.IvyPlugin)))
+[debug] Clause(Atom(sbt.plugins.IvyPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.SemanticdbPlugin)))
+[debug] Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.JUnitXmlReportPlugin)))
+[debug] Clause(Atom(sbt.plugins.CorePlugin),Set(Atom(sbt.plugins.Giter8TemplatePlugin)))
+[debug] Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.MiniDependencyTreePlugin))))
+[debug]   :: deduced result: Matched(sbt.plugins.CorePlugin,sbt.plugins.Giter8TemplatePlugin,sbt.plugins.IvyPlugin,sbt.plugins.JvmPlugin,sbt.plugins.MiniDependencyTreePlugin,sbt.plugins.JUnitXmlReportPlugin,sbt.plugins.SemanticdbPlugin)
+[debug] Plugins.deducer#function took 20.8025 ms
+[debug]           Load.resolveProject(global-plugins) took 49.6435ms
+[debug]         Load.loadTransitive: finalizeProject(Project(id global-plugins, base: C:\Users\jtvieira\.sbt\1.0\plugins, plugins: List(<none>))) took 97.5844ms
+[debug] [Loading] Done in C:\Users\jtvieira\.sbt\1.0\plugins, returning: (global-plugins)
+[debug]       Load.loadUnit: loadedProjectsRaw took 128.0554ms
+[debug]       Load.loadUnit: cleanEvalClasses took 0.2077ms
+[debug]     Load.loadUnit(file:/C:/Users/jtvieira/.sbt/1.0/plugins/, ...) took 248.8386ms
+[debug]   Load.apply: load took 464.4737ms
+[debug]   Load.apply: resolveProjects took 7.52ms
+[debug]   Load.apply: finalTransforms took 57.126ms
+[debug]   Load.apply: config.delegates took 10.1393ms
+[debug]   Load.apply: Def.make(settings)... took 530.2227ms
+[debug]   Load.apply: structureIndex took 171.3685ms
+[debug]   Load.apply: mkStreams took 3.0346ms
+[info] loading global plugins from C:\Users\jtvieira\.sbt\1.0\plugins
+[debug] Running task... Cancel: Signal, check cycles: false, forcegc: true
+[debug] Load.defaultLoad until apply took 5635.4432ms
+[debug]           Load.loadUnit: plugins took 33.4336ms
+[debug]           Load.loadUnit: defsScala took 0.0034ms
+[debug] [Loading] Scanning directory C:\Users\jtvieira\workspace\dataquality\project
+[debug]             Load.loadUnit: mkEval took 8.6373ms
+[debug] [Loading] Found non-root projects 
+[debug] [Loading] Done in C:\Users\jtvieira\workspace\dataquality\project, returning: ()
+[debug] deducing auto plugins based on known facts Set(Atom(sbt.plugins.CorePlugin)) and clauses Clauses(Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.IvyPlugin)))
+[debug] Clause(Atom(sbt.ScriptedPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.SbtPlugin),Set(Atom(sbt.ScriptedPlugin)))
+[debug] Clause(Atom(sbt.plugins.SemanticdbPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.JUnitXmlReportPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.MiniDependencyTreePlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.CorePlugin),Set(Atom(sbt.plugins.IvyPlugin)))
+[debug] Clause(Atom(sbt.plugins.IvyPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.SemanticdbPlugin)))
+[debug] Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.JUnitXmlReportPlugin)))
+[debug] Clause(Atom(sbt.plugins.CorePlugin),Set(Atom(sbt.plugins.Giter8TemplatePlugin)))
+[debug] Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.MiniDependencyTreePlugin))))
+[debug]   :: deduced result: Matched(sbt.plugins.CorePlugin,sbt.plugins.Giter8TemplatePlugin,sbt.plugins.IvyPlugin,sbt.plugins.JvmPlugin,sbt.plugins.MiniDependencyTreePlugin,sbt.plugins.JUnitXmlReportPlugin,sbt.plugins.SemanticdbPlugin)
+[debug] Plugins.deducer#function took 2.6901 ms
+[info] loading settings for project dataquality-build from plugins.sbt,idea.sbt ...
+[debug]               Load.resolveProject(dataquality-build) took 6.231ms
+[debug]             Load.loadTransitive: finalizeProject(Project(id dataquality-build, base: C:\Users\jtvieira\workspace\dataquality\project, plugins: List(<none>))) took 9.6185ms
+[debug] [Loading] Done in C:\Users\jtvieira\workspace\dataquality\project, returning: (dataquality-build)
+[debug]           Load.loadUnit: loadedProjectsRaw took 3143.5501ms
+[debug]           Load.loadUnit: cleanEvalClasses took 5.8636ms
+[debug]         Load.loadUnit(file:/C:/Users/jtvieira/workspace/dataquality/project/, ...) took 3183.8149ms
+[debug]       Load.apply: load took 3185.2748ms
+[debug]       Load.apply: resolveProjects took 0.1554ms
+[debug]       Load.apply: finalTransforms took 13.7633ms
+[debug]       Load.apply: config.delegates took 1.5303ms
+[debug]       Load.apply: Def.make(settings)... took 92.2883ms
+[debug]       Load.apply: structureIndex took 23.2288ms
+[debug]       Load.apply: mkStreams took 0.0027ms
+[info] loading project definition from C:\Users\jtvieira\workspace\dataquality\project
+[debug] Running task... Cancel: Signal, check cycles: false, forcegc: true
+[warn] Unrecognized repository Scala Plugin Bundled Repository, ignoring it
+[debug]     Load.loadUnit: plugins took 5685.8755ms
+[debug]     Load.loadUnit: defsScala took 0.0027ms
+[debug] [Loading] Scanning directory C:\Users\jtvieira\workspace\dataquality
+[debug]       Load.loadUnit: mkEval took 0.5698ms
+[debug] [Loading] Found non-root projects 
+[debug] [Loading] Done in C:\Users\jtvieira\workspace\dataquality, returning: ()
+[debug] deducing auto plugins based on known facts Set(Atom(sbt.plugins.CorePlugin)) and clauses Clauses(Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.IvyPlugin)))
+[debug] Clause(Atom(sbt.ScriptedPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.SbtPlugin),Set(Atom(sbt.ScriptedPlugin)))
+[debug] Clause(Atom(sbt.plugins.SemanticdbPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.JUnitXmlReportPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.MiniDependencyTreePlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbtide.ConfigPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(org.jetbrains.sbt.StructurePlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(org.jetbrains.sbt.IdeaShellPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(org.jetbrains.sbt.indices.SbtIntellijIndicesPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.CorePlugin),Set(Atom(sbt.plugins.IvyPlugin)))
+[debug] Clause(Atom(sbt.plugins.IvyPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.SemanticdbPlugin)))
+[debug] Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.JUnitXmlReportPlugin)))
+[debug] Clause(Atom(sbt.plugins.CorePlugin),Set(Atom(sbt.plugins.Giter8TemplatePlugin)))
+[debug] Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.MiniDependencyTreePlugin)))
+[debug] Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(org.jetbrains.sbt.StructurePlugin)))
+[debug] Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(org.jetbrains.sbt.IdeaShellPlugin)))
+[debug] Clause(And(Set(Atom(sbt.plugins.CorePlugin), Atom(sbt.plugins.JvmPlugin))),Set(Atom(org.jetbrains.sbt.indices.SbtIntellijIndicesPlugin))))
+[debug]   :: deduced result: Matched(sbt.plugins.CorePlugin,sbt.plugins.Giter8TemplatePlugin,sbt.plugins.IvyPlugin,sbt.plugins.JvmPlugin,sbt.plugins.SemanticdbPlugin,org.jetbrains.sbt.indices.SbtIntellijIndicesPlugin,sbt.plugins.JUnitXmlReportPlugin,org.jetbrains.sbt.IdeaShellPlugin,org.jetbrains.sbt.StructurePlugin,sbt.plugins.MiniDependencyTreePlugin)
+[debug] Plugins.deducer#function took 4.3063 ms
+[info] loading settings for project dataquality from build.sbt ...
+[debug]         Load.resolveProject(dataquality) took 70.5593ms
+[debug]       Load.loadTransitive: finalizeProject(Project(id dataquality, base: C:\Users\jtvieira\workspace\dataquality, plugins: List(<none>))) took 77.5859ms
+[debug] [Loading] Done in C:\Users\jtvieira\workspace\dataquality, returning: (dataquality)
+[debug]     Load.loadUnit: loadedProjectsRaw took 3154.283ms
+[debug]     Load.loadUnit: cleanEvalClasses took 62.1776ms
+[debug]   Load.loadUnit(file:/C:/Users/jtvieira/workspace/dataquality/, ...) took 8903.0443ms
+[debug] Load.apply: load took 8905.9009ms
+[debug] Load.apply: resolveProjects took 0.2441ms
+[debug] Load.apply: finalTransforms took 45.0842ms
+[debug] Load.apply: config.delegates took 0.499ms
+[debug] Load.apply: Def.make(settings)... took 138.5822ms
+[debug] Load.apply: structureIndex took 35.854ms
+[debug] Load.apply: mkStreams took 0.0037ms
+[info] set current project to untitled1 (in build file:/C:/Users/jtvieira/workspace/dataquality/)
+[warn] there's a key that's not used by any other settings/tasks:
+[warn]  
+[warn] * dataquality / idePackagePrefix
+[warn]   +- C:\Users\jtvieira\workspace\dataquality\build.sbt:7
+[warn]  
+[warn] note: a setting might still be used by a command; to exclude a key from this `lintUnused` check
+[warn] either append it to `Global / excludeLintKeys` or call .withRank(KeyRanks.Invisible) on the key
+[debug] > Exec(sbtPopOnFailure, None, None)
+[debug] > Exec(resumeFromFailure, None, None)
+[debug] > Exec(notifyUsersAboutShell, None, None)
+[debug] > Exec(iflast shell, None, None)
+[debug] > Exec(; set ideaPort in Global := 50233 ; idea-shell, None, None)
+[debug] > Exec(set ideaPort in Global := 50233, None, None)
+[info] Defining Global / ideaPort
+[info] The new value will be used by Compile / compile, Test / compile
+[debug] Defining 
+[debug] 	Global / ideaPort
+[debug] 
+[debug] The new value will be used by 
+[debug] 	Compile / compile
+[debug] 	Test / compile
+[info] Reapplying settings...
+[info] set current project to untitled1 (in build file:/C:/Users/jtvieira/workspace/dataquality/)
+[debug] > Exec(idea-shell, None, None)
