@@ -23,7 +23,8 @@ object ColetaVolumetria extends App {
     //.where(s"""concat(A.banco, A.tabela, A.dt_foto, A.dt_processamento) <> concat('${database}','${table}','${var_data_foto}',cast(date_format(current_date(),"yyyyMMdd") as string)""")
     .where(s"""concat(A.banco, A.tabela, A.dt_foto,  A.dt_processamento) <> concat('${database}','${table}','${var_data_foto}', date_format(current_date(),"yyyyMMdd") )""")
     .withColumn("fonte",lit(1))
-    .where(col("A.tabela") === "'${table}'")
+  //  .where(col("A.tabela") === "${table}")
+
     .limit(5)
     .show
 

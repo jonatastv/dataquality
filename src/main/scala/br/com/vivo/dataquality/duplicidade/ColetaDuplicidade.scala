@@ -5,6 +5,9 @@ import org.apache.spark.SparkConf
 import org.apache.spark.sql.hive.HiveContext
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.DataFrame
+import scala.util.{Failure, Success, Try}
+import java.io.{File, PrintWriter, StringWriter}
+import org.apache.spark.sql.types._
 
 
 object ColetaDuplicidade extends App {
@@ -21,16 +24,24 @@ object ColetaDuplicidade extends App {
    | --queue Qualidade \
    | --class br.com.vivo.dataquality.duplicidade.ColetaDuplicidade \
    | /home/SPDQ/indra/dataquality_2.10-0.1.jar p_bigd_urm tbgd_turm_controle_faturas_vivo_money  20210520 dt_foto 1
+
+ CREATE TABLE IF NOT EXISTS h_bigd_dq_db.temp_dtfoto_teste ( dt_foto String, valor String)
+STORED AS ORC TBLPROPERTIES ('orc.compress' = 'SNAPPY');
+
    */
 
   val sc = new SparkContext(new SparkConf() )
   val sqlContext = new HiveContext(sc)
+  val erroutput = new StringWriter
+
 
  // val tabela = h_bigd_dq_db.dq_duplicados_medidas_aux_01_coletaDuplicidade_ + ${database} + "_"+${table}+"_teste"
 
  // val drop = sqlContext.sql(s"drop table if exists h_bigd_dq_db.dq_duplicados_medidas_aux_01_coletaDuplicidade_${database}_${table}_teste")
 
-  val duplicateDF = sqlContext.sql(s"""
+  try {
+    val duplicateDF = sqlContext.sql(
+      s"""
 
  -- create Table IF NOT EXISTS h_bigd_dq_db.dq_duplicados_medidas_aux_01_coletaDuplicidade_${database}_${table}_teste
  -- create Table IF NOT EXISTS h_bigd_dq_db.dq_duplicados_medidas_aux_01_coletaDuplicidade_p_bigd_urm_tbgd_turm_controle_faturas_vivo_money_teste
@@ -93,7 +104,7 @@ left join (
    on C2.dt_foto = A2.dt_foto
     """)
 
-  duplicateDF.show
+    duplicateDF.show
 
   //val duplicateDFnew = duplicateDF.withColumn("fonte",lit(2))
 
@@ -140,5 +151,45 @@ left join (
       format("orc").
       insertInto("h_bigd_dq_db.dq_duplicados_medidas_aux_01_coletaDuplicidade_p_bigd_urm_tbgd_turm_controle_faturas_vivo_money_teste")
       //h_bigd_dq_db.dq_duplicados_medidas
+    Success(duplicateDF)
+
+    val tempview = sqlContext.sql(s"select '$var_data_foto' as dt_foto , '1' as valor ")
+    // valor 1 para sucesso ao carregar partição dt_foto da tabela
+
+    tempview.
+      write.
+      mode("append").
+      format("orc").
+      insertInto("h_bigd_dq_db.temp_dtfoto_teste")
+
+
+  } catch
+  {
+    case _: Throwable => val tempview = sqlContext.sql(s"select '$var_data_foto' as dt_foto , '0' as valor ")
+
+      tempview.
+        write.
+        mode("append").
+        format("orc").
+        insertInto("h_bigd_dq_db.temp_dtfoto_teste")
+
+      /*val ff = sqlContext.sql(
+      s"""
+         create Table IF NOT EXISTS h_bigd_dq_db.temp_dtfoto_teste
+
+          STORED AS ORC TBLPROPERTIES ('orc.compress' = 'SNAPPY') as
+          select * from teste
+
+         """)
+      **/
+    /*d.printStackTrace(new PrintWriter(erroutput))
+      new PrintWriter(s"/tmp/yspark_log") //Saves error message to this location
+      {
+        write(erroutput.toString);
+
+        close
+      }
+      */
+  }
 
 }

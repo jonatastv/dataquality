@@ -1,0 +1,49 @@
+[debug] > Exec(publishLocal, None, None)
+[debug] Evaluating tasks: publishLocal
+[debug] Running task... Cancel: Signal, check cycles: false, forcegc: true
+[info] Wrote C:\Users\jtvieira\workspace\dataquality\target\scala-2.10\dataquality_2.10-0.1.pom
+[info] Main Scala API documentation to C:\Users\jtvieira\workspace\dataquality\target\scala-2.10\api...
+[info] Main Scala API documentation successful.
+[info] compiling 1 Scala source to C:\Users\jtvieira\workspace\dataquality\target\scala-2.10\classes ...
+[info] done compiling
+[warn] multiple main classes detected: run 'show discoveredMainClasses' to see the list
+[info] :: delivering :: default#dataquality_2.10;0.1 :: 0.1 :: release :: Fri May 28 14:44:51 BRT 2021
+[info] 	delivering ivy file to C:\Users\jtvieira\workspace\dataquality\target\scala-2.10\ivy-0.1.xml
+[warn] Attempting to overwrite C:\Users\jtvieira\.ivy2\local\default\dataquality_2.10\0.1\poms\dataquality_2.10.pom (non-SNAPSHOT)
+[warn] 	You need to remove it from the cache manually to take effect.
+[warn] Attempting to overwrite C:\Users\jtvieira\.ivy2\local\default\dataquality_2.10\0.1\poms\dataquality_2.10.pom.sha1 (non-SNAPSHOT)
+[warn] 	You need to remove it from the cache manually to take effect.
+[warn] Attempting to overwrite C:\Users\jtvieira\.ivy2\local\default\dataquality_2.10\0.1\poms\dataquality_2.10.pom.md5 (non-SNAPSHOT)
+[warn] 	You need to remove it from the cache manually to take effect.
+[info] 	published dataquality_2.10 to C:\Users\jtvieira\.ivy2\local\default\dataquality_2.10\0.1\poms\dataquality_2.10.pom
+[warn] Attempting to overwrite C:\Users\jtvieira\.ivy2\local\default\dataquality_2.10\0.1\jars\dataquality_2.10.jar (non-SNAPSHOT)
+[warn] 	You need to remove it from the cache manually to take effect.
+[warn] Attempting to overwrite C:\Users\jtvieira\.ivy2\local\default\dataquality_2.10\0.1\jars\dataquality_2.10.jar.sha1 (non-SNAPSHOT)
+[warn] 	You need to remove it from the cache manually to take effect.
+[warn] Attempting to overwrite C:\Users\jtvieira\.ivy2\local\default\dataquality_2.10\0.1\jars\dataquality_2.10.jar.md5 (non-SNAPSHOT)
+[warn] 	You need to remove it from the cache manually to take effect.
+[info] 	published dataquality_2.10 to C:\Users\jtvieira\.ivy2\local\default\dataquality_2.10\0.1\jars\dataquality_2.10.jar
+[warn] Attempting to overwrite C:\Users\jtvieira\.ivy2\local\default\dataquality_2.10\0.1\srcs\dataquality_2.10-sources.jar (non-SNAPSHOT)
+[warn] 	You need to remove it from the cache manually to take effect.
+[warn] Attempting to overwrite C:\Users\jtvieira\.ivy2\local\default\dataquality_2.10\0.1\srcs\dataquality_2.10-sources.jar.sha1 (non-SNAPSHOT)
+[warn] 	You need to remove it from the cache manually to take effect.
+[warn] Attempting to overwrite C:\Users\jtvieira\.ivy2\local\default\dataquality_2.10\0.1\srcs\dataquality_2.10-sources.jar.md5 (non-SNAPSHOT)
+[warn] 	You need to remove it from the cache manually to take effect.
+[info] 	published dataquality_2.10 to C:\Users\jtvieira\.ivy2\local\default\dataquality_2.10\0.1\srcs\dataquality_2.10-sources.jar
+[warn] Attempting to overwrite C:\Users\jtvieira\.ivy2\local\default\dataquality_2.10\0.1\docs\dataquality_2.10-javadoc.jar (non-SNAPSHOT)
+[warn] 	You need to remove it from the cache manually to take effect.
+[warn] Attempting to overwrite C:\Users\jtvieira\.ivy2\local\default\dataquality_2.10\0.1\docs\dataquality_2.10-javadoc.jar.sha1 (non-SNAPSHOT)
+[warn] 	You need to remove it from the cache manually to take effect.
+[warn] Attempting to overwrite C:\Users\jtvieira\.ivy2\local\default\dataquality_2.10\0.1\docs\dataquality_2.10-javadoc.jar.md5 (non-SNAPSHOT)
+[warn] 	You need to remove it from the cache manually to take effect.
+[info] 	published dataquality_2.10 to C:\Users\jtvieira\.ivy2\local\default\dataquality_2.10\0.1\docs\dataquality_2.10-javadoc.jar
+[warn] Attempting to overwrite C:\Users\jtvieira\.ivy2\local\default\dataquality_2.10\0.1\ivys\ivy.xml (non-SNAPSHOT)
+[warn] 	You need to remove it from the cache manually to take effect.
+[warn] Attempting to overwrite C:\Users\jtvieira\.ivy2\local\default\dataquality_2.10\0.1\ivys\ivy.xml.sha1 (non-SNAPSHOT)
+[warn] 	You need to remove it from the cache manually to take effect.
+[warn] Attempting to overwrite C:\Users\jtvieira\.ivy2\local\default\dataquality_2.10\0.1\ivys\ivy.xml.md5 (non-SNAPSHOT)
+[warn] 	You need to remove it from the cache manually to take effect.
+[info] 	published ivy to C:\Users\jtvieira\.ivy2\local\default\dataquality_2.10\0.1\ivys\ivy.xml
+[debug] Forcing garbage collection...
+[success] Total time: 5 s, completed 28/05/2021 14:44:52
+[debug] > Exec(idea-shell, None, None)
