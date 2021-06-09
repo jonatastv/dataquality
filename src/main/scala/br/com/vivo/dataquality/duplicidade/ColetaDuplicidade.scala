@@ -36,16 +36,57 @@ STORED AS ORC TBLPROPERTIES ('orc.compress' = 'SNAPPY');
 
 
  // val tabela = h_bigd_dq_db.dq_duplicados_medidas_aux_01_coletaDuplicidade_ + ${database} + "_"+${table}+"_teste"
-
- // val drop = sqlContext.sql(s"drop table if exists h_bigd_dq_db.dq_duplicados_medidas_aux_01_coletaDuplicidade_${database}_${table}_teste")
-
   try {
+
+ val partiton_df = sqlContext.sql(s"show partitions ${database}.${table}").toDF("result")
+
+  partiton_df.orderBy(desc("result")).show()
+
+  partiton_df.registerTempTable("partitions_df")
+
+  val ff = sqlContext.sql(
+    s"""
+       select * from partitions_df
+       where
+       case
+       when '$var_formato_dt_foto' = '1' then cast(result as string) = '$var_nome_campo=$var_data_foto'
+       when '$var_formato_dt_foto' = '2' then cast(date_format(result,"yyyyMMdd") as string) = '$var_nome_campo=$var_data_foto'
+       end
+       """).count()
+
+  println(ff)
+
+  if (ff == 0) {
+    println("não existe partição para essa dt_foto "+ff)
+
+    val save_df = sqlContext.sql(
+      s"""
+         |select '$database' as banco,
+         |'$table' as tabela,
+         |'$var_data_foto' as dt_foto,
+         | date_format(current_date(),"yyyyMMdd") as dt_processamento,
+         |'0' as status
+         |""".stripMargin)
+
+      save_df.
+      write.
+      mode("append").
+      format("orc").
+      insertInto("h_bigd_dq_db.temp_dtfoto_teste")
+
+            }
+  else {
+    println("tem partição " +ff )
+
+
+  val dropDF = sqlContext.sql(s"drop table if exists h_bigd_dq_db.dq_duplicados_medidas_aux_01_coletaDuplicidade_${database}_${table}_teste")
+
     val duplicateDF = sqlContext.sql(
       s"""
 
- -- create Table IF NOT EXISTS h_bigd_dq_db.dq_duplicados_medidas_aux_01_coletaDuplicidade_${database}_${table}_teste
+  create Table IF NOT EXISTS h_bigd_dq_db.dq_duplicados_medidas_aux_01_coletaDuplicidade_${database}_${table}_teste
  -- create Table IF NOT EXISTS h_bigd_dq_db.dq_duplicados_medidas_aux_01_coletaDuplicidade_p_bigd_urm_tbgd_turm_controle_faturas_vivo_money_teste
- -- STORED AS ORC TBLPROPERTIES ('orc.compress' = 'SNAPPY') as
+  STORED AS ORC TBLPROPERTIES ('orc.compress' = 'SNAPPY') as
 
 select
 A2.banco,
@@ -54,8 +95,7 @@ A2.dt_foto,
 A2.dt_processamento,
 cast(B2.qtde1 as bigint) qtde1,
 cast(C2.qtde2 as bigint) qtde2,
-cast(B2.qtde1 as bigint) - cast(C2.qtde2 as bigint) diferenca,
-'2' as fonte
+cast(B2.qtde1 as bigint) - cast(C2.qtde2 as bigint) diferenca
 
 from (
    -- GRUPO 1
@@ -102,24 +142,64 @@ left join (
 
 ) as C2
    on C2.dt_foto = A2.dt_foto
-    """)
+    """).coalesce(100)
 
-    duplicateDF.show
+    //duplicateDF.show
 
-  //val duplicateDFnew = duplicateDF.withColumn("fonte",lit(2))
+   // duplicateDF.registerTempTable("duplicados_medidas")
 
-  //duplicateDF.show
+    sqlContext.setConf("hive.exec.dynamic.partition.mode" ,"nonstrict")
+    sqlContext.setConf("hive.exec.dynamic.partition" ,"true")
+
+  /*  val dropDF = sqlContext.sql(s"drop table if exists h_bigd_dq_db.dq_duplicados_medidas_aux_01_coletaDuplicidade_${database}_${table}_teste")
+    val createDF = sqlContext.sql(
+      s"""create Table IF NOT EXISTS h_bigd_dq_db.dq_duplicados_medidas_aux_01_coletaDuplicidade_${database}_${table}_teste
+         |STORED AS ORC TBLPROPERTIES ('orc.compress' = 'SNAPPY') as
+         |select * from duplicados_medidas""".stripMargin)
+*/
+
+
+  /*  val ff = partiton_df.select("*")
+     // .where(s"result = '$var_nome_campo=$var_data_foto'")
+    //  .where(s"result = 'dt_foto=2021-06-07'")
+      .where(
+        s"""
+           |case
+           |            when '$var_formato_dt_foto' = '1' then cast(result as string) = '$var_nome_campo=$var_data_foto'
+           |            when '$var_formato_dt_foto' = '2' then cast(date_format(result,"yyyyMMdd") as string) = '$var_nome_campo=$var_data_foto'
+           |end""".stripMargin)
+
+      .count()
+  */
+
+
+
+
+
 
 /*
-  val medidasDF  = sqlContext.table("h_bigd_dq_db.dq_duplicados_medidas").alias("A")
-    .select("A.banco","A.tabela","A.dt_foto","A.dt_processamento","A.qtde1","A.qtde2","A.diferenca")
-    .withColumn("fonte",lit(1))
-   // .where(s"""concat(A.banco, A.tabela, A.dt_foto,  A.dt_processamento) <> concat('${database}','${table}','${var_data_foto}', date_format(current_date(),"yyyyMMdd") )""")
-    .where(col("banco") !== database)
-    .where(col("tabela") !== table)
-    .where(col("dt_foto") !== var_data_foto)
-    .where(col("dt_processamento") !== date_format(current_date(),"yyyyMMdd"))
-    .unionAll(
+    val df_sucess = sqlContext.table(s"h_bigd_dq_db.dq_duplicados_medidas_aux_01_coletaDuplicidade_${database}_${table}_teste")
+    df_sucess.select(
+      df_sucess.col("banco"),
+      df_sucess.col("tabela"),
+      df_sucess.col("dt_foto"),
+      df_sucess.col("dt_processamento")
+    ).
+      withColumn("status", lit(1))
+*/
+
+    // status 1 para sucesso ao carregar partição dt_foto da tabela
+
+ //h_bigd_dq_db.dq_duplicados_medidas
+  /*  val medidasDF  = sqlContext.table("h_bigd_dq_db.temp_medidas_teste").alias("A")
+      .select("A.banco","A.tabela","A.dt_foto","A.dt_processamento","A.qtde1","A.qtde2","A.diferenca")
+      .withColumn("fonte",lit(1))
+       .where(s"""concat(A.banco, A.tabela, A.dt_foto,  A.dt_processamento) <> concat('${database}','${table}','${var_data_foto}', date_format(current_date(),"yyyyMMdd") )""")
+    //  .where(col("banco") !== database)
+    //  .where(col("tabela") !== table)
+    //  .where(col("dt_foto") !== var_data_foto)
+    //  .where(col("dt_processamento") !== date_format(current_date(),"yyyyMMdd"))
+      .unionAll(
         duplicateDF.select(
           duplicateDF.col("banco"),
           duplicateDF.col("tabela"),
@@ -131,43 +211,56 @@ left join (
           duplicateDF.col("fonte")
           //duplicateDF.withColumn("fonte",lit(2))
         )
-    )
-    .toDF()
+      ).dropDuplicates
+      .toDF()
+*/
+
+/*
+    medidasDF.registerTempTable("duplicados_medidas")
+    val dropf = sqlContext.sql("drop table if exists h_bigd_dq_db.temp_medidas_teste")
+    val final_medidas = sqlContext.sql(
+      s"""
+         |create Table IF NOT EXISTS h_bigd_dq_db.temp_medidas_teste
+         |STORED AS ORC TBLPROPERTIES ('orc.compress' = 'SNAPPY') as
+         |select distinct * from duplicados_medidas""".stripMargin)
 */
 
 
-  //h_bigd_dq_db.dq_duplicados_medidas_aux_01_coletaDuplicidade_${database}_${table}
-//h_bigd_dq_db.${var_tabela_auxiliar}
-
-
-    sqlContext.setConf("hive.exec.dynamic.partition.mode" ,"nonstrict")
-    sqlContext.setConf("hive.exec.dynamic.partition" ,"true")
-
-
-
-  duplicateDF.
+ //   val createMedidas = sqlContext.sql(s"create Table IF NOT EXISTS h_bigd_dq_db.temp_medidas_teste")
+/*
+    duplicateDF.
       write.
       mode("append").
       format("orc").
-      insertInto("h_bigd_dq_db.dq_duplicados_medidas_aux_01_coletaDuplicidade_p_bigd_urm_tbgd_turm_controle_faturas_vivo_money_teste")
+      insertInto("h_bigd_dq_db.temp_medidas_teste")
       //h_bigd_dq_db.dq_duplicados_medidas
     Success(duplicateDF)
-
-    val tempview = sqlContext.sql(s"select '$var_data_foto' as dt_foto , '1' as valor ")
+*/
+  //  val tempview = sqlContext.sql(s"select '$var_data_foto' as dt_foto , '1' as valor ")
     // valor 1 para sucesso ao carregar partição dt_foto da tabela
 
-    tempview.
+  /*  df_sucess.
       write.
       mode("append").
       format("orc").
       insertInto("h_bigd_dq_db.temp_dtfoto_teste")
-
+*/
+  }
 
   } catch
   {
-    case _: Throwable => val tempview = sqlContext.sql(s"select '$var_data_foto' as dt_foto , '0' as valor ")
+    case _: Throwable => val temperror = sqlContext.sql(
+      s"""
+         | -- insert overwrite table h_bigd_dq_db.temp_dtfoto_teste
+         |select distinct  '$database' as banco,
+         |'$table' as tabela,
+         |'$var_data_foto' as dt_foto,
+         | date_format(current_date(),"yyyyMMdd") as dt_processamento,
+         |'0' as status
+         |""".stripMargin)
 
-      tempview.
+      temperror.
+        distinct().
         write.
         mode("append").
         format("orc").
@@ -191,5 +284,7 @@ left join (
       }
       */
   }
+
+
 
 }
