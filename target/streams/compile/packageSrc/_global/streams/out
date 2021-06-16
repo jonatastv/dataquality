@@ -2,6 +2,14 @@
 [debug] Input file mappings:
 [debug] 	br\com\vivo\dataquality\duplicidade\ColetaDuplicidade.scala
 [debug] 	  C:\Users\jtvieira\workspace\dataquality\src\main\scala\br\com\vivo\dataquality\duplicidade\ColetaDuplicidade.scala
+[debug] 	br\com\vivo\dataquality\duplicidade\ColetaDuplicidadeNext.scala
+[debug] 	  C:\Users\jtvieira\workspace\dataquality\src\main\scala\br\com\vivo\dataquality\duplicidade\ColetaDuplicidadeNext.scala
+[debug] 	br\com\vivo\dataquality\duplicidade\JuntaTabela.scala
+[debug] 	  C:\Users\jtvieira\workspace\dataquality\src\main\scala\br\com\vivo\dataquality\duplicidade\JuntaTabela.scala
+[debug] 	br\com\vivo\dataquality\flop\CorrigirBuraco.scala
+[debug] 	  C:\Users\jtvieira\workspace\dataquality\src\main\scala\br\com\vivo\dataquality\flop\CorrigirBuraco.scala
 [debug] 	br\com\vivo\dataquality\volumetria\ColetaVolumetria.scala
 [debug] 	  C:\Users\jtvieira\workspace\dataquality\src\main\scala\br\com\vivo\dataquality\volumetria\ColetaVolumetria.scala
+[debug] 	br\com\vivo\dataquality\volumetria\ColetaVolumetriaNext.scala
+[debug] 	  C:\Users\jtvieira\workspace\dataquality\src\main\scala\br\com\vivo\dataquality\volumetria\ColetaVolumetriaNext.scala
 [debug] Done packaging.

@@ -31,7 +31,7 @@ STORED AS ORC TBLPROPERTIES ('orc.compress' = 'SNAPPY');
   val erroutput = new StringWriter
 
 
-  try {
+  //try {
 
 
     val partiton_df = sqlContext.sql(s"show partitions ${database}.${table}").toDF("result")
@@ -42,15 +42,15 @@ STORED AS ORC TBLPROPERTIES ('orc.compress' = 'SNAPPY');
 
     val ff = sqlContext.sql(
       s"""
-       select * from partitions_df
+       select result from partitions_df
        where
        case
        when '$var_formato_dt_foto' = '1' then cast(result as string) = '$var_nome_campo=$var_data_foto'
-       when '$var_formato_dt_foto' = '2' then cast(date_format(result,"yyyyMMdd") as string) = '$var_nome_campo=$var_data_foto'
+       when '$var_formato_dt_foto' = '2' then date_format(substr(result, ${var_nome_campo.size} +2  ,10), "yyyyMMdd") = "$var_data_foto"
        end
        """).count()
 
-    println(ff)
+
 
     if (ff == 0) {
       println("não existe partição para essa dt_foto "+ff)
@@ -89,8 +89,7 @@ A2.dt_foto,
 A2.dt_processamento,
 cast(B2.qtde1 as bigint) qtde1,
 cast(C2.qtde2 as bigint) qtde2,
-cast(B2.qtde1 as bigint) - cast(C2.qtde2 as bigint) diferenca,
-'2' as fonte
+cast(B2.qtde1 as bigint) - cast(C2.qtde2 as bigint) diferenca
 
 from (
    -- GRUPO 1
@@ -147,7 +146,7 @@ left join (
 
     }
 
-  } catch
+ /* } catch
   {
     case _: Throwable => val temperror = sqlContext.sql(
       s"""
@@ -167,7 +166,7 @@ left join (
 
 
   }
-
+*/
 
 
 }

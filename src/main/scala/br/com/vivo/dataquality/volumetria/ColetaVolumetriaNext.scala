@@ -1,12 +1,10 @@
 package br.com.vivo.dataquality.volumetria
 
-
-import org.apache.spark.SparkContext
-import org.apache.spark.SparkConf
-import org.apache.spark.sql.hive.HiveContext
+import org.apache.spark.{SparkConf, SparkContext}
 import org.apache.spark.sql.functions._
+import org.apache.spark.sql.hive.HiveContext
 
-object ColetaVolumetria extends App {
+object ColetaVolumetriaNext extends App {
 
   val database: String = args(0)
   val table: String = args(1)
@@ -27,47 +25,7 @@ object ColetaVolumetria extends App {
   val sqlContext = new HiveContext(sc)
 
 
-  val partiton_df = sqlContext.sql(s"show partitions ${database}.${table}").toDF("result")
 
-  partiton_df.orderBy(desc("result")).show()
-
-  partiton_df.registerTempTable("partitions_df")
-
-  val ff = sqlContext.sql(
-    s"""
-       select result from partitions_df
-       where
-       case
-       when '$var_formato_dt_foto' = '1' then cast(result as string) = '$var_nome_campo=$var_data_foto'
-       when '$var_formato_dt_foto' = '2' then date_format(regexp_replace(result, '$var_nome_campo=',''),"yyyyMMdd") = "$var_data_foto"
-       end
-       """).count()
-
-  println(ff)
-
-  if (ff == 0) {
-    println("não existe partição para essa dt_foto "+ff)
-
-    val save_df = sqlContext.sql(
-      s"""
-         |select '$database' as banco,
-         |'$table' as tabela,
-         |'$var_data_foto' as dt_foto,
-         | date_format(current_date(),"yyyyMMdd") as dt_processamento,
-         |'0' as status
-         |""".stripMargin)
-
-    save_df.
-      write.
-      mode("append").
-      format("orc").
-      insertInto("h_bigd_dq_db.temp_dtfoto_teste")
-
-  }
-  else {
-
-
-    println("tem partição " +ff )
 
     val tabela = sqlContext.sql(
       s"""
@@ -80,7 +38,10 @@ object ColetaVolumetria extends App {
          |'1' as fonte
          |from (
          |select count(*) as qtde_registros from ${database}.${table}
-         |where
+         |where p_state = 'published'
+         |and   p_workflow_id = 'event-compacted'
+         |and   p_attempt = '0'
+         |and
          |    case
          |       when '$var_formato_dt_foto' = '1' then cast($var_nome_campo as string) = '$var_data_foto'
          |       when '$var_formato_dt_foto' = '2' then cast(date_format($var_nome_campo,"yyyyMMdd") as string) = '$var_data_foto'
@@ -121,6 +82,5 @@ object ColetaVolumetria extends App {
     //.limit(5)
 
 
-  }
 
 }

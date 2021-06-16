@@ -38,19 +38,22 @@ STORED AS ORC TBLPROPERTIES ('orc.compress' = 'SNAPPY');
  // val tabela = h_bigd_dq_db.dq_duplicados_medidas_aux_01_coletaDuplicidade_ + ${database} + "_"+${table}+"_teste"
   try {
 
+    sqlContext.setConf("hive.exec.dynamic.partition.mode" ,"nonstrict")
+    sqlContext.setConf("hive.exec.dynamic.partition" ,"true")
+
  val partiton_df = sqlContext.sql(s"show partitions ${database}.${table}").toDF("result")
 
   partiton_df.orderBy(desc("result")).show()
 
   partiton_df.registerTempTable("partitions_df")
 
-  val ff = sqlContext.sql(
-    s"""
-       select * from partitions_df
+ val ff = sqlContext.sql(
+   s"""
+       select result from partitions_df
        where
        case
        when '$var_formato_dt_foto' = '1' then cast(result as string) = '$var_nome_campo=$var_data_foto'
-       when '$var_formato_dt_foto' = '2' then cast(date_format(result,"yyyyMMdd") as string) = '$var_nome_campo=$var_data_foto'
+       when '$var_formato_dt_foto' = '2' then date_format(regexp_replace(result, '$var_nome_campo=',''),"yyyyMMdd") = "$var_data_foto"
        end
        """).count()
 
@@ -142,14 +145,13 @@ left join (
 
 ) as C2
    on C2.dt_foto = A2.dt_foto
-    """).coalesce(100)
+    """)
 
     //duplicateDF.show
 
    // duplicateDF.registerTempTable("duplicados_medidas")
 
-    sqlContext.setConf("hive.exec.dynamic.partition.mode" ,"nonstrict")
-    sqlContext.setConf("hive.exec.dynamic.partition" ,"true")
+
 
   /*  val dropDF = sqlContext.sql(s"drop table if exists h_bigd_dq_db.dq_duplicados_medidas_aux_01_coletaDuplicidade_${database}_${table}_teste")
     val createDF = sqlContext.sql(
@@ -245,6 +247,7 @@ left join (
       format("orc").
       insertInto("h_bigd_dq_db.temp_dtfoto_teste")
 */
+
   }
 
   } catch

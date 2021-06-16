@@ -221,19 +221,6 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>App → DelayedInit</dd></dl></div>
-    </li><li name="br.com.vivo.dataquality.duplicidade.ColetaDuplicidade#duplicateDF" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="duplicateDF:org.apache.spark.sql.DataFrame"></a>
-      <a id="duplicateDF:DataFrame"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">val</span>
-      </span>
-      <span class="symbol">
-        <span class="name">duplicateDF</span><span class="result">: <span class="extype" name="org.apache.spark.sql.DataFrame">DataFrame</span></span>
-      </span>
-      </h4>
-      
     </li><li name="scala.AnyRef#eq" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="eq(x$1:AnyRef):Boolean"></a>
       <a id="eq(AnyRef):Boolean"></a>
@@ -260,6 +247,19 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="br.com.vivo.dataquality.duplicidade.ColetaDuplicidade#erroutput" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="erroutput:java.io.StringWriter"></a>
+      <a id="erroutput:StringWriter"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">erroutput</span><span class="result">: <span class="extype" name="java.io.StringWriter">StringWriter</span></span>
+      </span>
+      </h4>
+      
     </li><li name="scala.App#executionStart" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="executionStart:Long"></a>
       <a id="executionStart:Long"></a>
@@ -344,19 +344,6 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>App</dd></dl></div>
-    </li><li name="br.com.vivo.dataquality.duplicidade.ColetaDuplicidade#medidasDF" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="medidasDF:org.apache.spark.sql.DataFrame"></a>
-      <a id="medidasDF:DataFrame"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">val</span>
-      </span>
-      <span class="symbol">
-        <span class="name">medidasDF</span><span class="result">: <span class="extype" name="org.apache.spark.sql.DataFrame">DataFrame</span></span>
-      </span>
-      </h4>
-      
     </li><li name="scala.AnyRef#ne" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ne(x$1:AnyRef):Boolean"></a>
       <a id="ne(AnyRef):Boolean"></a>
@@ -415,8 +402,8 @@
    | time spark-submit --master yarn  \
    | --queue Qualidade \
    | --class br.com.vivo.dataquality.duplicidade.ColetaDuplicidade \
-   | /home/SPDQ/indra/dataquality_2.10-0.1.jar p_bigd_urm tbgd_turm_controle_faturas_vivo_money  20210520 dt_foto 1
-</p></div></div>
+   | /home/SPDQ/indra/dataquality_2.10-0.1.jar p_bigd_urm tbgd_turm_controle_faturas_vivo_money  20210520 dt_foto 1</p><p> CREATE TABLE IF NOT EXISTS h_bigd_dq_db.temp_dtfoto_teste ( dt_foto String, valor String)
+STORED AS ORC TBLPROPERTIES ('orc.compress' = 'SNAPPY');</p></div></div>
     </li><li name="br.com.vivo.dataquality.duplicidade.ColetaDuplicidade#sqlContext" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="sqlContext:org.apache.spark.sql.hive.HiveContext"></a>
       <a id="sqlContext:HiveContext"></a>

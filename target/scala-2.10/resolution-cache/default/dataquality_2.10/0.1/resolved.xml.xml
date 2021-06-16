@@ -34,6 +34,5 @@
     <dependency org="org.apache.spark" name="spark-core_2.10" rev="1.6.3" conf="compile-&gt;default(compile)"> </dependency>
     <dependency org="org.apache.spark" name="spark-sql_2.10" rev="1.6.3" conf="compile-&gt;default(compile)"> </dependency>
     <dependency org="org.apache.spark" name="spark-hive_2.10" rev="1.5.0" conf="compile-&gt;default(compile)"> </dependency>
-    <dependency org="com.databricks" name="spark-csv_2.11" rev="1.2.0" conf="compile-&gt;default(compile)"> </dependency>
   </dependencies>
 </ivy-module>

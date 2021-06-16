@@ -260,6 +260,19 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>App</dd></dl></div>
+    </li><li name="br.com.vivo.dataquality.volumetria.ColetaVolumetria#ff" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ff:Long"></a>
+      <a id="ff:Long"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">ff</span><span class="result">: <span class="extype" name="scala.Long">Long</span></span>
+      </span>
+      </h4>
+      
     </li><li name="scala.AnyRef#finalize" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="finalize():Unit"></a>
       <a id="finalize():Unit"></a>
@@ -319,7 +332,7 @@
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
     </li><li name="scala.App#main" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="main(args:&lt;?&gt;):Unit"></a>
+      <a id="main(args:Array[String]):Unit"></a>
       <a id="main(Array[String]):Unit"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -370,7 +383,20 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="br.com.vivo.dataquality.volumetria.ColetaVolumetria#sc" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="br.com.vivo.dataquality.volumetria.ColetaVolumetria#partiton_df" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="partiton_df:org.apache.spark.sql.DataFrame"></a>
+      <a id="partiton_df:DataFrame"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">partiton_df</span><span class="result">: <span class="extype" name="org.apache.spark.sql.DataFrame">DataFrame</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="br.com.vivo.dataquality.volumetria.ColetaVolumetria#sc" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="sc:org.apache.spark.SparkContext"></a>
       <a id="sc:SparkContext"></a>
       <h4 class="signature">
@@ -382,7 +408,15 @@
         <span class="name">sc</span><span class="result">: <span class="extype" name="org.apache.spark.SparkContext">SparkContext</span></span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt">  | Example command line to run this app:
+   | time spark-submit --master yarn  \
+   | --queue Qualidade \
+   | --class br.</p><div class="fullcomment"><div class="comment cmt"><p>  | Example command line to run this app:
+   | time spark-submit --master yarn  \
+   | --queue Qualidade \
+   | --class br.com.vivo.dataquality.volumetria.ColetaVolumetria  \
+   | /home/SPDQ/indra/dataquality_2.10-0.1.jar p_bigd_urm tbgd_turm_controle_faturas_vivo_money  20210520 dt_foto 1
+</p></div></div>
     </li><li name="br.com.vivo.dataquality.volumetria.ColetaVolumetria#sqlContext" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="sqlContext:org.apache.spark.sql.hive.HiveContext"></a>
       <a id="sqlContext:HiveContext"></a>
@@ -471,19 +505,6 @@
       </span>
       <span class="symbol">
         <span class="name">var_nome_campo</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
-      </span>
-      </h4>
-      
-    </li><li name="br.com.vivo.dataquality.volumetria.ColetaVolumetria#volumetria_medidas" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="volumetria_medidas:Unit"></a>
-      <a id="volumetria_medidas:Unit"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">val</span>
-      </span>
-      <span class="symbol">
-        <span class="name">volumetria_medidas</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
       </h4>
       
