@@ -60,7 +60,8 @@ STORED AS ORC TBLPROPERTIES ('orc.compress' = 'SNAPPY');
            |select '$database' as banco,
            |'$table' as tabela,
            |'$var_data_foto' as dt_foto,
-           | date_format(current_date(),"yyyyMMdd") as dt_processamento,
+           |'${var_nome_campo}' as var_nome_campo,
+           |'${var_formato_dt_foto}' as var_formato_dt_foto,
            |'0' as status
            |""".stripMargin)
 
@@ -68,7 +69,7 @@ STORED AS ORC TBLPROPERTIES ('orc.compress' = 'SNAPPY');
         write.
         mode("append").
         format("orc").
-        insertInto("h_bigd_dq_db.temp_dtfoto_teste")
+        insertInto("h_bigd_dq_db.dq_duplicidade_falhas")
 
     }
     else {

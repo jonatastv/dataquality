@@ -25,16 +25,17 @@ object ColetaVolumetria extends App {
 
   val sc = new SparkContext(new SparkConf() )
   val sqlContext = new HiveContext(sc)
+  var validador = 0
 
 
-  val partiton_df = sqlContext.sql(s"show partitions ${database}.${table}").toDF("result")
+    val partiton_df = sqlContext.sql(s"show partitions ${database}.${table}").toDF("result")
 
-  partiton_df.orderBy(desc("result")).show()
+    partiton_df.orderBy(desc("result")).show()
 
-  partiton_df.registerTempTable("partitions_df")
+    partiton_df.registerTempTable("partitions_df")
 
-  val ff = sqlContext.sql(
-    s"""
+    val ff = sqlContext.sql(
+      s"""
        select result from partitions_df
        where
        case
@@ -43,31 +44,35 @@ object ColetaVolumetria extends App {
        end
        """).count()
 
-  println(ff)
+    println(ff)
 
-  if (ff == 0) {
-    println("não existe partição para essa dt_foto "+ff)
+    validador = ff.toInt
 
-    val save_df = sqlContext.sql(
-      s"""
-         |select '$database' as banco,
-         |'$table' as tabela,
-         |'$var_data_foto' as dt_foto,
-         | date_format(current_date(),"yyyyMMdd") as dt_processamento,
-         |'0' as status
-         |""".stripMargin)
+    if (validador == 0) {
+      println("não existe partição para essa dt_foto " + validador)
 
-    save_df.
-      write.
-      mode("append").
-      format("orc").
-      insertInto("h_bigd_dq_db.temp_dtfoto_teste")
+      val save_df = sqlContext.sql(
+        s"""
+           |select '$database' as banco,
+           |'$table' as tabela,
+           |'$var_data_foto' as dt_foto,
+           |'$var_nome_campo' as var_nome_campo,
+           |'$var_formato_dt_foto' as var_formato_dt_foto,
+           |0 as status
+           |""".stripMargin)
 
-  }
+      save_df.
+        write.
+        mode("append").
+        format("orc").
+        insertInto("h_bigd_dq_db.dq_volumetria_falhas")
+
+    }
+
   else {
 
 
-    println("tem partição " +ff )
+    println("tem partição " +validador )
 
     val tabela = sqlContext.sql(
       s"""
@@ -77,7 +82,7 @@ object ColetaVolumetria extends App {
          |'${var_data_foto}' as dt_foto,
          |date_format(current_date(),"yyyyMMdd") as dt_processamento,
          |A2.qtde_registros,
-         |'1' as fonte
+         |'2' as fonte
          |from (
          |select count(*) as qtde_registros from ${database}.${table}
          |where

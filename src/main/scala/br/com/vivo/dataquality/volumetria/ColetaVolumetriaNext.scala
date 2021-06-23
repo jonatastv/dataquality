@@ -35,7 +35,7 @@ object ColetaVolumetriaNext extends App {
          |'${var_data_foto}' as dt_foto,
          |date_format(current_date(),"yyyyMMdd") as dt_processamento,
          |A2.qtde_registros,
-         |'1' as fonte
+         |'2' as fonte
          |from (
          |select count(*) as qtde_registros from ${database}.${table}
          |where p_state = 'published'

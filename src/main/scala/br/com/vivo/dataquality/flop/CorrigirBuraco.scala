@@ -9,10 +9,13 @@ object CorrigirBuraco extends  App{
 
   /**
   | Example command line to run this app:
-   | time spark-submit --master yarn  \
-   | --queue Qualidade \
-   | --class br.com.vivo.dataquality.duplicidade.JuntaTabela \
-   | /home/SPDQ/indra/dataquality_2.10-0.1.jar p_bigd_urm tbgd_turm_controle_faturas_vivo_money 20210520 dq_duplicados_medidas_aux_01_coletaDuplicidade_${database}_${table}_teste
+   | time spark-submit \
+  --master yarn \
+  --executor-memory 27g \
+  --driver-memory 3g \
+  --queue Qualidade \
+  --class br.com.vivo.dataquality.flop.CorrigirBuraco \
+  /home/SPDQ/indra/dataquality_2.10-0.1.jar
 
    */
 
@@ -26,9 +29,9 @@ object CorrigirBuraco extends  App{
   val dfsql = sqlContext.sql(
     s"""
        select distinct *
-       from h_bigd_dq_db.temp_dtfoto_teste
-       where dt_foto = '20210615'
-       and tabela not in ('com_amdocs_insight_dh_shared_mutables_payment_paymentmutable','tbgd_turm_customer')
+       from h_bigd_dq_db.dq_volumetria_falhas
+       where status = 0
+       and tabela not in ('tbgd_turm_customer')
 
        """).toDF()
 
@@ -53,6 +56,15 @@ object CorrigirBuraco extends  App{
 
   }
 
+  val var_nome_campo: Array[String] = for (var_nome_campo <- dfsql.select("var_nome_campo").collect()) yield {
+    var_nome_campo.getString(0)
+
+  }
+
+  val var_formato_dt_foto: Array[String] = for (var_formato_dt_foto <- dfsql.select("var_formato_dt_foto").collect()) yield {
+    var_formato_dt_foto.getString(0)
+
+  }
 
   /*
 val s = ""
@@ -77,7 +89,10 @@ val s = ""
       s"""
        select result from partitions_df
        where
-       result = 'dt_foto=${var_data_foto(wi)}'
+       case
+       when '${var_formato_dt_foto(wi)}' = '1' then cast(result as string) = '${var_nome_campo(wi)}=${var_data_foto(wi)}'
+       when '${var_formato_dt_foto(wi)}' = '2' then date_format(regexp_replace(result, '${var_nome_campo(wi)}=',''),"yyyyMMdd") = "${var_data_foto(wi)}"
+       end
        """).count()
 
     println(ff)
@@ -111,7 +126,7 @@ val s = ""
       //.where(s"""concat(A.banco, A.tabela, A.dt_foto, A.dt_processamento) <> concat('${database}','${table}','${var_data_foto}',cast(date_format(current_date(),"yyyyMMdd") as string)""")
       .where(s"""concat(A.banco, A.tabela, A.dt_foto,  A.dt_processamento) <> concat('${database(wi)}','${table(wi)}','${var_data_foto(wi)}', date_format(current_date(),"yyyyMMdd") )""")
       // .where(s"""concat(A.banco, A.tabela, A.dt_foto,  A.dt_processamento) <> concat('${database}','${table}','${var_data_foto}', date_format(current_date(),"yyyyMMdd") )""")
-      .withColumn("fonte",lit(1))
+      .withColumn("fonte",lit(2))
       .unionAll(
         tempDF.select(
           tempDF.col("banco"),
@@ -133,12 +148,52 @@ val s = ""
          |insert overwrite table h_bigd_dq_db.temp_medidas_volumetria_teste
          |select  * from volumetria_medidas""".stripMargin)
 
-    /*
+      println("passou aqui!")
+      val volumetria_corrigido = sqlContext.sql(
+        s"""
+           |select
+           |'${database(wi)}' as banco,
+           |'${table(wi)}' as tabela,
+           |'${var_data_foto(wi)}' as dt_foto,
+           |'${var_nome_campo(wi)}' as var_nome_campo,
+           |'${var_formato_dt_foto(wi)}' as var_formato_dt_foto,
+           |1 as status
+           |
+           |""".stripMargin)
+
+      val volumetria = sqlContext.sql(
+        s"""
+           |select  *
+           |from h_bigd_dq_db.dq_volumetria_falhas
+           |where
+           |tabela not in ('tbgd_turm_customer')
+           |""".stripMargin)
+
+      val dq_volumetria_falhas = volumetria.select("banco","tabela","dt_foto","var_nome_campo","var_formato_dt_foto","status")
+        .where(s"""concat(banco, tabela, dt_foto) <> concat('${database(wi)}','${table(wi)}','${var_data_foto(wi)}')""")
+        .unionAll(
+          volumetria_corrigido.select(
+            volumetria_corrigido.col("banco"),
+            volumetria_corrigido.col("tabela"),
+            volumetria_corrigido.col("dt_foto"),
+            volumetria_corrigido.col("var_nome_campo"),
+            volumetria_corrigido.col("var_formato_dt_foto"),
+            volumetria_corrigido.col("status")
+        )
+        )
+        .dropDuplicates
+        .orderBy("dt_foto")
+
+      dq_volumetria_falhas.show
+
+      dq_volumetria_falhas.registerTempTable("dq_volumetria_falhas_temp")
+
     val droprow = sqlContext.sql(
-      s"""update  h_bigd_dq_db.temp_medidas_volumetria_teste set status = '1' where banco = ${database(wi)}
-         and tabela = ${table(wi)}
-         and dt_foto = ${var_data_foto(wi)} """)
-*/
+      s"""
+          insert overwrite table h_bigd_dq_db.dq_volumetria_falhas
+          select distinct * from dq_volumetria_falhas_temp
+         """)
+
 
   }
     }
