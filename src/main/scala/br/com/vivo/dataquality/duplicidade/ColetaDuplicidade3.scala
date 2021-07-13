@@ -14,11 +14,11 @@ object ColetaDuplicidade3 extends App {
   val sc = new SparkContext(new SparkConf() )
   val sqlContext = new HiveContext(sc)
 
-  val dropDF = sqlContext.sql(s"drop table if exists h_bigd_dq_db.dq_duplicados_medidas_aux_01_coletaDuplicidade_${database}_${table}_teste")
+  val dropDF = sqlContext.sql(s"drop table if exists h_bigd_dq_db.dq_duplicados_medidas_aux_01_coletaDuplicidade_${database}_${table}_t")
 
   val duplicateDF = sqlContext.sql(
     s"""
-  create Table IF NOT EXISTS h_bigd_dq_db.dq_duplicados_medidas_aux_01_coletaDuplicidade_${database}_${table}_teste
+  create Table IF NOT EXISTS h_bigd_dq_db.dq_duplicados_medidas_aux_01_coletaDuplicidade_${database}_${table}_t
   STORED AS ORC TBLPROPERTIES ('orc.compress' = 'SNAPPY') as
 select
 A2.banco,
@@ -41,7 +41,7 @@ from (
 left join (
    select
    date_format(date_sub(current_date() , 1 ),"yyyyMMdd")  as dt_foto,
-   count(B1.dt_foto) qtde1
+   count(B1.${var_nome_campo}) qtde1
    from $database.$table as B1
 ) as B2
    on B2.dt_foto = A2.dt_foto

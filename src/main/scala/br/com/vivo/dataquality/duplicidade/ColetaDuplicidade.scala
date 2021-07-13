@@ -30,7 +30,7 @@ STORED AS ORC TBLPROPERTIES ('orc.compress' = 'SNAPPY');
 
    */
 
-  val sc = new SparkContext(new SparkConf() )
+  val sc = new SparkContext(new SparkConf() .set("spark.port.maxRetries", "100") )
   val sqlContext = new HiveContext(sc)
   val erroutput = new StringWriter
 

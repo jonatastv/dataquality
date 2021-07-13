@@ -1,7 +1,7 @@
-[info] :: delivering :: default#dataquality_2.10;0.1 :: 0.1 :: release :: Wed Jun 16 16:39:42 BRT 2021
-[debug] 	options = status=release pubdate=Wed Jun 16 16:39:42 BRT 2021 validate=true resolveDynamicRevisions=true merge=true resolveId=null pubBranch=null
+[info] :: delivering :: default#dataquality_2.10;0.1 :: 0.1 :: release :: Tue Jul 13 14:47:08 BRT 2021
+[debug] 	options = status=release pubdate=Tue Jul 13 14:47:08 BRT 2021 validate=true resolveDynamicRevisions=true merge=true resolveId=null pubBranch=null
 [info] 	delivering ivy file to C:\Users\jtvieira\workspace\dataquality\target\scala-2.10\ivy-0.1.xml
-[debug] 	deliver done (16ms)
+[debug] 	deliver done (12ms)
 [debug] local do not support transaction. ivy pattern does not use revision as a directory
 [debug] C:\Users\jtvieira\.ivy2\local\default\dataquality_2.10\0.1\poms\dataquality_2.10.pom already exists, nothing done
 [warn] Attempting to overwrite C:\Users\jtvieira\.ivy2\local\default\dataquality_2.10\0.1\poms\dataquality_2.10.pom (non-SNAPSHOT)

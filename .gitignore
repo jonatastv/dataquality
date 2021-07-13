@@ -1,8 +1,10 @@
+target/
+target
+/target
+*/target/*
+*/target/**
 .bsp/
 .idea
 .idea/
 metastore_db/
 tmp/
-target/
-target
-*/target/*

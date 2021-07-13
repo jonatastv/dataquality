@@ -2,12 +2,13 @@ package br.com.vivo.dataquality.flop
 
 import org.apache.spark.SparkContext
 import org.apache.spark.SparkConf
+import org.apache.spark.sql.DataFrame
 import org.apache.spark.sql.hive.HiveContext
 import org.apache.spark.sql.functions._
 
 object CorrigirBuracoDuplicidade extends App {
 
-
+  val atualizacao: String = args(0)
   /**
   | Example command line to run this app:
    | time spark-submit \
@@ -17,7 +18,7 @@ object CorrigirBuracoDuplicidade extends App {
   --num-executors 100 \
   --queue Qualidade \
   --class br.com.vivo.dataquality.flop.CorrigirBuracoDuplicidade \
-  /home/SPDQ/indra/dataquality_2.10-0.1.jar
+  /home/SPDQ/indra/dataquality_2.10-0.1.jar diario
 
    */
 
@@ -36,17 +37,41 @@ object CorrigirBuracoDuplicidade extends App {
 
   val sc = new SparkContext(new SparkConf() )
   val sqlContext = new HiveContext(sc)
-  //sc.setLogLevel("ERROR")
+  sc.setLogLevel("ERROR")
 
 
-  val dfsql = sqlContext.sql(
-    s"""
+  def criarDataframe(frequencia: String): DataFrame = {
+    if (frequencia == "diario") {
+
+      val df_diario = sqlContext.sql(
+        s"""
        select distinct *
        from h_bigd_dq_db.dq_duplicidade_falhas
        where status = 0
        and tabela not in ('tbgd_turm_customer')
-       """).toDF()
+       and dt_foto >= date_format(date_add(current_date,-1),"yyyyMMdd")
 
+       """).toDF()
+      return df_diario
+    }
+    else  {
+
+      val df_semanal  = sqlContext.sql(
+        s"""
+       select distinct *
+       from h_bigd_dq_db.dq_duplicidade_falhas
+       where status = 0
+       and tabela not in ('tbgd_turm_customer')
+       and  dt_foto between date_format(date_add(current_date,-7),"yyyyMMdd") and date_format(date_add(current_date,-2),"yyyyMMdd")
+
+       """).toDF()
+      return df_semanal
+    }
+
+  }
+
+
+  val dfsql = criarDataframe(s"${atualizacao}")
   dfsql.show()
 
   val database: Array[String] = for (database <- dfsql.select("banco").collect()) yield {
@@ -248,7 +273,7 @@ left join (
 
       val duplicidade = sqlContext.sql(
         s"""
-           |select distinct *
+           |select  *
            |from h_bigd_dq_db.dq_duplicidade_falhas
            |where
            |tabela not in ('tbgd_turm_customer')
@@ -276,7 +301,7 @@ left join (
       val droprow = sqlContext.sql(
         s"""
           insert overwrite table h_bigd_dq_db.dq_duplicidade_falhas
-          select  * from dq_duplicidade_falhas_temp
+          select distinct * from dq_duplicidade_falhas_temp
          """)
 
     }

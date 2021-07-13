@@ -1,28 +1,28 @@
 [debug] [zinc] IncrementalCompile -----------
 [debug] IncrementalCompile.incrementalCompile
-[debug] previous = Stamps for: 22 products, 6 sources, 5 libraries
-[debug] current source = Set(${BASE}/src/main/scala/br/com/vivo/dataquality/volumetria/ColetaVolumetriaNext.scala, ${BASE}/src/main/scala/br/com/vivo/dataquality/duplicidade/ColetaDuplicidadeNext.scala, ${BASE}/src/main/scala/br/com/vivo/dataquality/volumetria/ColetaVolumetria.scala, ${BASE}/src/main/scala/br/com/vivo/dataquality/flop/CorrigirBuraco.scala, ${BASE}/src/main/scala/br/com/vivo/dataquality/duplicidade/JuntaTabela.scala, ${BASE}/src/main/scala/br/com/vivo/dataquality/duplicidade/ColetaDuplicidade.scala)
-[debug] > initialChanges = InitialChanges(Changes(added = Set(), removed = Set(), changed = Set(${BASE}/src/main/scala/br/com/vivo/dataquality/flop/CorrigirBuraco.scala), unmodified = ...),Set(),Set(),API Changes: Set())
+[debug] previous = Stamps for: 66 products, 16 sources, 5 libraries
+[debug] current source = Set(${BASE}/src/main/scala/br/com/vivo/dataquality/duplicidade/ColetaDuplicidadeInvoicing.scala, ${BASE}/src/main/scala/br/com/vivo/dataquality/qualitativo/VivoEyes.scala, ${BASE}/src/main/scala/br/com/vivo/dataquality/flop/CorrigirBuracoDuplicidade.scala, ${BASE}/src/main/scala/br/com/vivo/dataquality/volumetria/ColetaVolumetria3.scala, ${BASE}/src/main/scala/br/com/vivo/dataquality/volumetria/ColetaVolumetriaNext.scala, ${BASE}/src/main/scala/br/com/vivo/dataquality/duplicidade/ColetaDuplicidadeNext.scala, ${BASE}/src/main/scala/br/com/vivo/dataquality/qualitativo/VivoMoney.scala, ${BASE}/src/main/scala/br/com/vivo/dataquality/flop/CorrigiBucaroFile.scala, ${BASE}/src/main/scala/br/com/vivo/dataquality/volumetria/ColetaVolumetria.scala, ${BASE}/src/main/scala/br/com/vivo/dataquality/flop/CorrigirBuraco.scala, ${BASE}/src/main/scala/br/com/vivo/dataquality/volumetria/ColetaVolumetriaInvoicing.scala, ${BASE}/src/main/scala/br/com/vivo/dataquality/duplicidade/ColetaDuplicidade3.scala, ${BASE}/src/main/scala/br/com/vivo/dataquality/qualitativo/VivoPlay.scala, ${BASE}/src/main/scala/br/com/vivo/dataquality/duplicidade/JuntaTabela.scala, ${BASE}/src/main/scala/br/com/vivo/dataquality/duplicidade/ColetaDuplicidade.scala, ${BASE}/src/main/scala/br/com/vivo/dataquality/duplicidade/JuntaTabela2.scala)
+[debug] > initialChanges = InitialChanges(Changes(added = Set(), removed = Set(), changed = Set(${BASE}/src/main/scala/br/com/vivo/dataquality/qualitativo/VivoPlay.scala), unmodified = ...),Set(),Set(),API Changes: Set())
 [debug] 
 [debug] Initial source changes:
 [debug] 	removed: Set()
 [debug] 	added: Set()
-[debug] 	modified: Set(${BASE}/src/main/scala/br/com/vivo/dataquality/flop/CorrigirBuraco.scala)
+[debug] 	modified: Set(${BASE}/src/main/scala/br/com/vivo/dataquality/qualitativo/VivoPlay.scala)
 [debug] Invalidated products: Set()
 [debug] External API changes: API Changes: Set()
 [debug] Modified binary dependencies: Set()
-[debug] Initial directly invalidated classes: Set(br.com.vivo.dataquality.flop.CorrigirBuraco)
+[debug] Initial directly invalidated classes: Set(br.com.vivo.dataquality.qualitativo.VivoPlay)
 [debug] Sources indirectly invalidated by:
 [debug] 	product: Set()
 [debug] 	binary dep: Set()
 [debug] 	external source: Set()
-[debug] All initially invalidated classes: Set(br.com.vivo.dataquality.flop.CorrigirBuraco)
-[debug] All initially invalidated sources:Set(${BASE}/src/main/scala/br/com/vivo/dataquality/flop/CorrigirBuraco.scala)
-[debug] Initial set of included nodes: br.com.vivo.dataquality.flop.CorrigirBuraco
+[debug] All initially invalidated classes: Set(br.com.vivo.dataquality.qualitativo.VivoPlay)
+[debug] All initially invalidated sources:Set(${BASE}/src/main/scala/br/com/vivo/dataquality/qualitativo/VivoPlay.scala)
+[debug] Initial set of included nodes: br.com.vivo.dataquality.qualitativo.VivoPlay
 [debug] compilation cycle 1
 [info] compiling 1 Scala source to C:\Users\jtvieira\workspace\dataquality\target\scala-2.10\classes ...
 [debug] Getting org.scala-sbt:compiler-bridge_2.10:1.5.3:compile for Scala 2.10.6
-[debug] [zinc] Running cached compiler 64b234e8 for Scala compiler version 2.10.6
+[debug] [zinc] Running cached compiler 5e1aedd9 for Scala compiler version 2.10.6
 [debug] [zinc] The Scala compiler is invoked with:
 [debug] 	-bootclasspath
 [debug] 	C:\Program Files\Java\jdk1.8.0_231\jre\lib\resources.jar;C:\Program Files\Java\jdk1.8.0_231\jre\lib\rt.jar;C:\Program Files\Java\jdk1.8.0_231\jre\lib\sunrsasign.jar;C:\Program Files\Java\jdk1.8.0_231\jre\lib\jsse.jar;C:\Program Files\Java\jdk1.8.0_231\jre\lib\jce.jar;C:\Program Files\Java\jdk1.8.0_231\jre\lib\charsets.jar;C:\Program Files\Java\jdk1.8.0_231\jre\lib\jfr.jar;C:\Program Files\Java\jdk1.8.0_231\jre\classes;C:\Users\jtvieira\AppData\Local\Coursier\Cache\v1\https\repo1.maven.org\maven2\org\scala-lang\scala-library\2.10.6\scala-library-2.10.6.jar
@@ -34,5 +34,5 @@
 [debug] Final step, transitive dependencies:
 [debug] 	Set()
 [debug] No classes were invalidated.
-[debug] Scala compilation took 1.2341252 s
+[debug] Scala compilation took 3.4446433 s
 [info] done compiling

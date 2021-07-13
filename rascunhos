@@ -1,0 +1,39 @@
+ val vveyes_b1 = sqlContext.sql(
+    """
+      |select
+      |date_format(current_date(),"yyyyMM")  as dt_foto,
+      |date_format(current_date(),"yyyyMMdd") as dt_processamento,
+      |B1.cluster,
+      |B1.erb,
+      |B1.regional,
+      |B1.tecnologia,
+      |B1.faixa_score,
+      |B1.controladora,
+      |B1.contratada,
+      |B1.receita,
+      |B1.trfg_minutos,
+      |B1.trfg_mb
+      |from h_bigd_vivoeyes_db.tbgd_wrk_vveyes_rank_gast_site_tec_prio_erbs B1
+      |where B1.erb = 'GJAL1'""".stripMargin)
+    .groupBy("dt_foto" ,"dt_processamento","cluster","erb","regional","tecnologia","faixa_score",
+      "controladora","contratada")
+    .sum("B1.receita","B1.trfg_minutos","B1.trfg_mb")
+
+
+
+ // decimal(30,2)
+  //LongType
+
+  val volumetria_medidas = sqlContext.table("h_bigd_dq_db.dq_qualitativo3_medidas").as("A")
+    .select("A.dt_foto","A.dt_processamento","A.cluster","A.erb","A.regional","A.tecnologia"
+      ,"A.faixa_score","A.controlador","A.contratada","A.receita","A.trfg_minutos","A.trfg_mb")
+    .withColumn("fonte",lit('1'))
+    .where("""concat(A.dt_foto,A.dt_processamento ) <> concat (date_format(current_date(),"yyyyMM"),date_format(current_date(),"yyyyMMdd"))""")
+
+/*
+  val ff = vveyes_b1.select(
+    vveyes_b1.col("sum(receita)").cast("decimal(30,2)"),
+      vveyes_b1.col("")
+  )
+    .show()
+ */

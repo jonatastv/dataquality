@@ -11,8 +11,8 @@ object ColetaVolumetria extends App {
   val database: String = args(0)
   val table: String = args(1)
   val var_data_foto: String = args(2)
-  val var_nome_campo: String = args(3)
-  val var_formato_dt_foto: String = args(4)
+  val var_nome_campo: String = args(3) //dt_foto ou p_data
+  val var_formato_dt_foto: String = args(4) // 1 ou 2
 
 
   /**
@@ -23,7 +23,7 @@ object ColetaVolumetria extends App {
    | /home/SPDQ/indra/dataquality_2.10-0.1.jar p_bigd_urm tbgd_turm_controle_faturas_vivo_money  20210520 dt_foto 1
    */
 
-  val sc = new SparkContext(new SparkConf() )
+  val sc = new SparkContext(new SparkConf() .set("spark.port.maxRetries", "100"))
   val sqlContext = new HiveContext(sc)
   var validador = 0
 

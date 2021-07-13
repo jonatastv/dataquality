@@ -2,10 +2,15 @@ package br.com.vivo.dataquality.flop
 
 import org.apache.spark.SparkContext
 import org.apache.spark.SparkConf
+import org.apache.spark.sql.DataFrame
 import org.apache.spark.sql.hive.HiveContext
 import org.apache.spark.sql.functions._
 
 object CorrigirBuraco extends  App{
+
+
+  val atualizacao: String = args(0)
+
 
   /**
   | Example command line to run this app:
@@ -15,31 +20,46 @@ object CorrigirBuraco extends  App{
   --driver-memory 3g \
   --queue Qualidade \
   --class br.com.vivo.dataquality.flop.CorrigirBuraco \
-  /home/SPDQ/indra/dataquality_2.10-0.1.jar
+  /home/SPDQ/indra/dataquality_2.10-0.1.jar diario
 
    */
 
   val sc = new SparkContext(new SparkConf() )
   val sqlContext = new HiveContext(sc)
-  sc.setLogLevel("ERROR")
+  //sc.setLogLevel("ERROR")
 
+  def criarDataframe(frequencia: String): DataFrame = {
+    if (frequencia == "diario") {
 
-
-
-  val dfsql = sqlContext.sql(
-    s"""
+      val df_diario = sqlContext.sql(
+        s"""
        select distinct *
        from h_bigd_dq_db.dq_volumetria_falhas
        where status = 0
        and tabela not in ('tbgd_turm_customer')
+       and dt_foto >= date_format(date_add(current_date,-1),"yyyyMMdd")
 
        """).toDF()
+      return df_diario
+    }
+    else  {
 
+      val df_semanal  = sqlContext.sql(
+        s"""
+       select distinct *
+       from h_bigd_dq_db.dq_volumetria_falhas
+       where  tabela not in ('tbgd_turm_customer')
+       and  dt_foto between date_format(date_add(current_date,-7),"yyyyMMdd") and date_format(date_add(current_date,-2),"yyyyMMdd")
+
+       """).toDF()
+      return df_semanal
+    }
+
+  }
+
+
+ val dfsql = criarDataframe(s"${atualizacao}")
   dfsql.show()
-
-  //tabela.foreach(f=> println(f))
-
-  //for ((name,rating) < tabela.) println(s"Movie: $name, Rating: $rating")
 
   val database: Array[String] = for (database <- dfsql.select("banco").collect()) yield {
     database.getString(0)

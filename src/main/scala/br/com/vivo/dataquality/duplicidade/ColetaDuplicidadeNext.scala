@@ -75,12 +75,12 @@ STORED AS ORC TBLPROPERTIES ('orc.compress' = 'SNAPPY');
     else {
       println("tem partição " + ff)
 
-      val dropDF = sqlContext.sql(s"drop table if exists h_bigd_dq_db.dq_duplicados_medidas_aux_01_coletaDuplicidade_${database}_${table}_teste")
+      val dropDF = sqlContext.sql(s"drop table if exists h_bigd_dq_db.dq_duplicados_medidas_aux_01_coletaDuplicidade_${database}_${table}_t")
 
       val duplicateDF = sqlContext.sql(
         s"""
 
-  create Table IF NOT EXISTS h_bigd_dq_db.dq_duplicados_medidas_aux_01_coletaDuplicidade_${database}_${table}_teste
+  create Table IF NOT EXISTS h_bigd_dq_db.dq_duplicados_medidas_aux_01_coletaDuplicidade_${database}_${table}_t
   STORED AS ORC TBLPROPERTIES ('orc.compress' = 'SNAPPY') as
 
 select

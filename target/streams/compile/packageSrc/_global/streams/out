@@ -2,14 +2,34 @@
 [debug] Input file mappings:
 [debug] 	br\com\vivo\dataquality\duplicidade\ColetaDuplicidade.scala
 [debug] 	  C:\Users\jtvieira\workspace\dataquality\src\main\scala\br\com\vivo\dataquality\duplicidade\ColetaDuplicidade.scala
+[debug] 	br\com\vivo\dataquality\duplicidade\ColetaDuplicidade3.scala
+[debug] 	  C:\Users\jtvieira\workspace\dataquality\src\main\scala\br\com\vivo\dataquality\duplicidade\ColetaDuplicidade3.scala
+[debug] 	br\com\vivo\dataquality\duplicidade\ColetaDuplicidadeInvoicing.scala
+[debug] 	  C:\Users\jtvieira\workspace\dataquality\src\main\scala\br\com\vivo\dataquality\duplicidade\ColetaDuplicidadeInvoicing.scala
 [debug] 	br\com\vivo\dataquality\duplicidade\ColetaDuplicidadeNext.scala
 [debug] 	  C:\Users\jtvieira\workspace\dataquality\src\main\scala\br\com\vivo\dataquality\duplicidade\ColetaDuplicidadeNext.scala
 [debug] 	br\com\vivo\dataquality\duplicidade\JuntaTabela.scala
 [debug] 	  C:\Users\jtvieira\workspace\dataquality\src\main\scala\br\com\vivo\dataquality\duplicidade\JuntaTabela.scala
+[debug] 	br\com\vivo\dataquality\duplicidade\JuntaTabela2.scala
+[debug] 	  C:\Users\jtvieira\workspace\dataquality\src\main\scala\br\com\vivo\dataquality\duplicidade\JuntaTabela2.scala
+[debug] 	br\com\vivo\dataquality\flop\CorrigiBucaroFile.scala
+[debug] 	  C:\Users\jtvieira\workspace\dataquality\src\main\scala\br\com\vivo\dataquality\flop\CorrigiBucaroFile.scala
 [debug] 	br\com\vivo\dataquality\flop\CorrigirBuraco.scala
 [debug] 	  C:\Users\jtvieira\workspace\dataquality\src\main\scala\br\com\vivo\dataquality\flop\CorrigirBuraco.scala
+[debug] 	br\com\vivo\dataquality\flop\CorrigirBuracoDuplicidade.scala
+[debug] 	  C:\Users\jtvieira\workspace\dataquality\src\main\scala\br\com\vivo\dataquality\flop\CorrigirBuracoDuplicidade.scala
+[debug] 	br\com\vivo\dataquality\qualitativo\VivoEyes.scala
+[debug] 	  C:\Users\jtvieira\workspace\dataquality\src\main\scala\br\com\vivo\dataquality\qualitativo\VivoEyes.scala
+[debug] 	br\com\vivo\dataquality\qualitativo\VivoMoney.scala
+[debug] 	  C:\Users\jtvieira\workspace\dataquality\src\main\scala\br\com\vivo\dataquality\qualitativo\VivoMoney.scala
+[debug] 	br\com\vivo\dataquality\qualitativo\VivoPlay.scala
+[debug] 	  C:\Users\jtvieira\workspace\dataquality\src\main\scala\br\com\vivo\dataquality\qualitativo\VivoPlay.scala
 [debug] 	br\com\vivo\dataquality\volumetria\ColetaVolumetria.scala
 [debug] 	  C:\Users\jtvieira\workspace\dataquality\src\main\scala\br\com\vivo\dataquality\volumetria\ColetaVolumetria.scala
+[debug] 	br\com\vivo\dataquality\volumetria\ColetaVolumetria3.scala
+[debug] 	  C:\Users\jtvieira\workspace\dataquality\src\main\scala\br\com\vivo\dataquality\volumetria\ColetaVolumetria3.scala
+[debug] 	br\com\vivo\dataquality\volumetria\ColetaVolumetriaInvoicing.scala
+[debug] 	  C:\Users\jtvieira\workspace\dataquality\src\main\scala\br\com\vivo\dataquality\volumetria\ColetaVolumetriaInvoicing.scala
 [debug] 	br\com\vivo\dataquality\volumetria\ColetaVolumetriaNext.scala
 [debug] 	  C:\Users\jtvieira\workspace\dataquality\src\main\scala\br\com\vivo\dataquality\volumetria\ColetaVolumetriaNext.scala
 [debug] Done packaging.
