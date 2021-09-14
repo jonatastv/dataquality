@@ -129,6 +129,24 @@ val s = ""
     }
     else {
 
+      val parametrosDf = spark.sql(
+        s"""
+           |select disponibilidade_fonte ,
+           |disponibilidade_detalhe ,
+           |tabela_medida
+           |from h_bigd_dq_db.dq_parametros
+           |where tabela = '${table(wi)}'
+           |""".stripMargin)
+
+      val projeto: Array[String] = for (projeto_2 <- parametrosDf.select("tabela_medida").collect()) yield {
+        projeto_2.getString(0).toLowerCase
+      }
+
+      var projetos = ""
+      for( i <-  projeto.indices ) {
+        projetos = projeto(i)
+      }
+
       val tempDF = spark.sql(
         s"""
            |select
@@ -146,11 +164,9 @@ val s = ""
            |""".stripMargin).toDF()
       tempDF.show()
 
-      val volumetria_medidas = spark.table("h_bigd_dq_db.temp_medidas_volumetria_teste").as("A")
+      val volumetria_medidas = spark.table(s"h_bigd_dq_db.dq_volumetria_medidas${projetos}").as("A")
         .select("A.banco","A.tabela","A.dt_foto","A.dt_processamento","A.qtde_registros")
-        //.where(s"""concat(A.banco, A.tabela, A.dt_foto, A.dt_processamento) <> concat('${database}','${table}','${var_data_foto}',cast(date_format(current_date(),"yyyyMMdd") as string)""")
         .where(s"""concat(A.banco, A.tabela, A.dt_foto,  A.dt_processamento) <> concat('${database(wi)}','${table(wi)}','${var_data_foto(wi)}', date_format(current_date(),"yyyyMMdd") )""")
-        // .where(s"""concat(A.banco, A.tabela, A.dt_foto,  A.dt_processamento) <> concat('${database}','${table}','${var_data_foto}', date_format(current_date(),"yyyyMMdd") )""")
         .withColumn("fonte",lit(2))
         .unionAll(
           tempDF.select(
@@ -170,7 +186,7 @@ val s = ""
         s"""
            |-- create Table IF NOT EXISTS h_bigd_dq_db.temp_medidas_volumetria_teste
            |-- STORED AS ORC TBLPROPERTIES ('orc.compress' = 'SNAPPY') as
-           |insert overwrite table h_bigd_dq_db.temp_medidas_volumetria_teste
+           |insert overwrite table h_bigd_dq_db.dq_volumetria_medidas${projetos}
            |select  * from volumetria_medidas""".stripMargin)
 
       println("passou aqui!")

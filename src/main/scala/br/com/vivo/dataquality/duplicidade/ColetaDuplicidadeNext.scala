@@ -32,6 +32,7 @@ STORED AS ORC TBLPROPERTIES ('orc.compress' = 'SNAPPY');
     .builder()
     .appName(s"Duplicidade_${table}")
     .config("spark.sql.broadcastTimeout", "36000")
+    .config("spark.port.maxRetries", "100")
     .enableHiveSupport()
     .getOrCreate()
   val erroutput = new StringWriter
@@ -59,7 +60,7 @@ STORED AS ORC TBLPROPERTIES ('orc.compress' = 'SNAPPY');
 
 
     if (ff == 0) {
-      println("não existe partição para essa dt_foto "+ff)
+      println("não existe partição para essa dt_foto " + ff)
 
       val save_df = spark.sql(
         s"""
@@ -76,6 +77,60 @@ STORED AS ORC TBLPROPERTIES ('orc.compress' = 'SNAPPY');
         mode("append").
         format("orc").
         insertInto("h_bigd_dq_db.dq_duplicidade_falhas")
+
+      val parametrosDf = spark.sql(
+        s"""
+           |select disponibilidade_fonte ,
+           |disponibilidade_detalhe ,
+           |tabela_medida
+           |from h_bigd_dq_db.dq_parametros
+           |where tabela = '${table}'
+           |""".stripMargin)
+
+
+      val projeto: Array[String] = for (projeto_2 <- parametrosDf.select("tabela_medida").collect()) yield {
+        projeto_2.getString(0).toLowerCase
+      }
+      var projetos = ""
+      for( i <-  projeto.indices ) {
+        projetos = projeto(i)
+      }
+
+
+      val duplicidade_data = spark.sql(
+        s"""
+           |select qtde1
+           |from h_bigd_dq_db.dq_duplicados_medidas${projetos}
+           |where tabela = '$table'
+           |and banco = '$database'
+           |and dt_foto = '$var_data_foto'
+           |and dt_processamento = date_format(current_date(),"yyyyMMdd")""".stripMargin).count()
+
+      println(duplicidade_data)
+      var count = 0
+      count = duplicidade_data.toInt
+
+      if (count == 0) {
+
+        spark.sql(s"drop table if exists h_bigd_dq_db.dq_duplicados_medidas_aux_01_coletaDuplicidade_${database}_${table}_t")
+
+        val save_duplicidade = spark.sql(
+          s"""
+             |select '$database' as banco,
+             |'$table' as tabela,
+             |'$var_data_foto' as dt_foto,
+             |date_format(current_date(),"yyyyMMdd") as dt_processamento,
+             |0 as qtde1,
+             |0 as qtde2,
+             |0 as diferenca,
+             |1 as fonte
+             |""".stripMargin)
+
+        save_duplicidade.createOrReplaceTempView("coleta")
+
+        spark.sql(s"create Table IF NOT EXISTS h_bigd_dq_db.dq_duplicados_medidas_aux_01_coletaDuplicidade_${database}_${table}_t  as select * from coleta")
+
+      }
 
     }
     else {

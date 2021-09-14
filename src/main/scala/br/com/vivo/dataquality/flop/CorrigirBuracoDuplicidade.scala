@@ -130,12 +130,30 @@ object CorrigirBuracoDuplicidade extends App {
     }
     else {
 
-      val dropDF = spark.sql(s"drop table if exists h_bigd_dq_db.dq_duplicados_medidas_aux_01_coletaDuplicidade_${database(i)}_${table(i)}_teste")
+      val parametrosDf = spark.sql(
+        s"""
+           |select disponibilidade_fonte ,
+           |disponibilidade_detalhe ,
+           |tabela_medida
+           |from h_bigd_dq_db.dq_parametros
+           |where tabela = '${table(i)}'
+           |""".stripMargin)
+
+
+      val projeto: Array[String] = for (projeto_2 <- parametrosDf.select("tabela_medida").collect()) yield {
+        projeto_2.getString(0).toLowerCase
+      }
+      var projetos = ""
+      for( f <-  projeto.indices ) {
+        projetos = projeto(f)
+      }
+
+      val dropDF = spark.sql(s"drop table if exists h_bigd_dq_db.dq_duplicados_medidas_aux_01_coletaDuplicidade_${database(i)}_${table(i)}_t")
 
       val duplicateDF = spark.sql(
         s"""
 
-  create Table IF NOT EXISTS h_bigd_dq_db.dq_duplicados_medidas_aux_01_coletaDuplicidade_${database(i)}_${table(i)}_teste
+  create Table IF NOT EXISTS h_bigd_dq_db.dq_duplicados_medidas_aux_01_coletaDuplicidade_${database(i)}_${table(i)}_t
  -- create Table IF NOT EXISTS h_bigd_dq_db.dq_duplicados_medidas_aux_01_coletaDuplicidade_p_bigd_urm_tbgd_turm_controle_faturas_vivo_money_teste
   STORED AS ORC TBLPROPERTIES ('orc.compress' = 'SNAPPY') as
 
@@ -195,12 +213,14 @@ left join (
    on C2.dt_foto = A2.dt_foto
     """)
 
-
+   /*
+    inicia processo junta tabela
+   */
       // val var_tabela_auxiliar = s"h_bigd_dq_db.dq_duplicados_medidas_aux_01_coletaDuplicidade_${database(i)}_${table(i)}_teste"
 
       val tabela = spark.sql(
         s"""
-           |-- create Table h_bigd_dq_db.dq_duplicados_medidas_aux_junta_tabela_teste
+           |-- create Table h_bigd_dq_db.dq_duplicados_medidas${projetos}
            |-- STORED AS ORC TBLPROPERTIES ('orc.compress' = 'SNAPPY') as
            |
            |-- HISTORICO DO CUBO
@@ -214,7 +234,7 @@ left join (
            |A.diferenca,
            |'1' as fonte
            |
-           |from h_bigd_dq_db.dq_duplicados_medidas_aux_junta_tabela_teste A
+           |from h_bigd_dq_db.dq_duplicados_medidas${projetos} A
            |where
            |-- FILTRO DO BANCO + TABELA + DT_FOTO + DT_PROCESSAMENTO
            |concat (
@@ -244,7 +264,7 @@ left join (
            |A.qtde2,
            |A.diferenca,
            |'2' as fonte
-           |from h_bigd_dq_db.dq_duplicados_medidas_aux_01_coletaDuplicidade_${database(i)}_${table(i)}_teste A
+           |from h_bigd_dq_db.dq_duplicados_medidas_aux_01_coletaDuplicidade_${database(i)}_${table(i)}_t A
            |order by dt_foto
            |""".stripMargin).toDF()
 
@@ -252,7 +272,7 @@ left join (
 
       val cretedf = spark.sql(
         s"""
-           |insert overwrite table h_bigd_dq_db.dq_duplicados_medidas_aux_junta_tabela_teste
+           |insert overwrite table h_bigd_dq_db.dq_duplicados_medidas${projetos}
            |select distinct * from temp
            |""".stripMargin)
 

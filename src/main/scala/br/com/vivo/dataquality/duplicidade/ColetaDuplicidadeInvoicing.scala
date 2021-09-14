@@ -20,6 +20,7 @@ object ColetaDuplicidadeInvoicing extends  App {
     .builder()
     .appName(s"Duplicidade_${table}")
     .config("spark.sql.broadcastTimeout", "36000")
+    .config("spark.port.maxRetries", "100")
     .enableHiveSupport()
     .getOrCreate()
 

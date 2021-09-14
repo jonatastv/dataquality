@@ -17,6 +17,23 @@ object ColetaVolumetriaInvoicing extends  App {
     .enableHiveSupport()
     .getOrCreate()
 
+  val parametrosDf = spark.sql(
+    s"""
+       |select disponibilidade_fonte ,
+       |disponibilidade_detalhe ,
+       |tabela_medida
+       |from h_bigd_dq_db.dq_parametros
+       |where tabela = '${table}'
+       |""".stripMargin)
+
+
+  val projeto: Array[String] = for (projeto_2 <- parametrosDf.select("tabela_medida").collect()) yield {
+    projeto_2.getString(0).toLowerCase
+  }
+
+  for( i <-  projeto.indices ) {
+
+
   val tabela = spark.sql(
     s"""
        |select
@@ -41,7 +58,7 @@ object ColetaVolumetriaInvoicing extends  App {
   // System.exit(1)
 
 
-  val volumetria_medidas = spark.table("h_bigd_dq_db.temp_medidas_volumetria_teste").as("A")
+  val volumetria_medidas = spark.table(s"h_bigd_dq_db.dq_volumetria_medidas${projeto(i)}").as("A")
     .select("A.banco","A.tabela","A.dt_foto","A.dt_processamento","A.qtde_registros")
     .where(s"""concat(A.banco, A.tabela,  A.dt_processamento) <> concat('${database}','${table}', date_format(current_date(),"yyyyMMdd") )""")
     .withColumn("fonte",lit(1))
@@ -59,14 +76,14 @@ object ColetaVolumetriaInvoicing extends  App {
     .orderBy("banco","tabela","dt_foto","dt_processamento")
 
 
-  volumetria_medidas.registerTempTable("volumetria_medidas")
+  volumetria_medidas.createOrReplaceTempView("volumetria_medidas")
   val final_medidas = spark.sql(
     s"""
-       |-- create Table IF NOT EXISTS h_bigd_dq_db.temp_medidas_volumetria_teste
+       |-- create Table IF NOT EXISTS h_bigd_dq_db.dq_volumetria_medidas${projeto(i)}
        |-- STORED AS ORC TBLPROPERTIES ('orc.compress' = 'SNAPPY') as
-       |insert overwrite table h_bigd_dq_db.temp_medidas_volumetria_teste
+       |insert overwrite table h_bigd_dq_db.dq_volumetria_medidas${projeto(i)}
        |select  * from volumetria_medidas""".stripMargin)
 
-
+  }
 
 }
