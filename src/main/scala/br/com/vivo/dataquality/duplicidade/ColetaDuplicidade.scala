@@ -1,9 +1,11 @@
 package br.com.vivo.dataquality.duplicidade
+import org.apache.http.auth.AuthenticationException
+import org.apache.log4j.{Level, Logger}
 import org.apache.spark.{SparkConf, SparkContext}
 import org.apache.spark.SparkContext
 import org.apache.spark.SparkConf
 import org.apache.spark.sql.functions._
-import org.apache.spark.sql.{DataFrame, SparkSession}
+import org.apache.spark.sql.{AnalysisException, DataFrame, SparkSession}
 
 import scala.util.{Failure, Success, Try}
 import java.io.{File, PrintWriter, StringWriter}
@@ -17,6 +19,18 @@ object ColetaDuplicidade extends App {
   val var_data_foto: String = args(2)
   val var_nome_campo: String = args(3)
   val var_formato_dt_foto: String = args(4)
+
+  @transient lazy val log: Logger = Logger.getLogger(getClass.getName)
+  log.setLevel(Level.INFO)
+
+  log.info(s"Iniciando o processo")
+  Logger.getLogger("org").setLevel(Level.OFF)
+  Logger.getLogger("akka").setLevel(Level.OFF)
+  Logger.getLogger("hive").setLevel(Level.OFF)
+
+
+  try{
+
 
   /**
    | Example command line to run this app:
@@ -38,15 +52,22 @@ STORED AS ORC TBLPROPERTIES ('orc.compress' = 'SNAPPY');
     .enableHiveSupport()
     .getOrCreate()
 
+  log.info(s"Iniciando aplicação spark")
+
+  val applicationId: String = spark.sparkContext.applicationId
+
+  log.info(s"**********************************************************************************")
+  log.info(s"*** Application ID: $applicationId")
+  log.info(s"**********************************************************************************")
 
 
  // val tabela = h_bigd_dq_db.dq_duplicados_medidas_aux_01_coletaDuplicidade_ + ${database} + "_"+${table}+"_teste"
  // try {
 
-
+  log.info(s"Verificando se existe partição")
  val partiton_df = spark.sql(s"show partitions ${database}.${table}").toDF("result")
 
-  partiton_df.orderBy(desc("result")).show()
+  //partiton_df.orderBy(desc("result")).show()
 
   partiton_df.registerTempTable("partitions_df")
 
@@ -60,11 +81,11 @@ STORED AS ORC TBLPROPERTIES ('orc.compress' = 'SNAPPY');
        end
        """).count()
 
-  println(ff)
+  //println(ff)
 
   if (ff == 0) {
-    println("não existe partição para essa dt_foto "+ff)
 
+    log.info(s"não existe partição para a dt_foto = $var_data_foto")
     val save_df = spark.sql(
       s"""
          |select '$database' as banco,
@@ -81,14 +102,24 @@ STORED AS ORC TBLPROPERTIES ('orc.compress' = 'SNAPPY');
       format("orc").
       insertInto("h_bigd_dq_db.dq_duplicidade_falhas")
 
+    log.info(s"salvando na tabela h_bigd_dq_db.dq_duplicidade_falhas")
+
     val parametrosDf = spark.sql(
       s"""
          |select disponibilidade_fonte ,
          |disponibilidade_detalhe ,
-         |tabela_medida
+         |tabela_medida,
+         |tabela
          |from h_bigd_dq_db.dq_parametros
          |where tabela = '${table}'
          |""".stripMargin)
+
+    log.info(s"lendo tabela h_bigd_dq_db.dq_parametros")
+    log.info(s"${parametrosDf.show(1)}")
+
+    if(parametrosDf.count() == 0){
+      log.info(s"Não existe '${table}' na tabela h_bigd_dq_db.dq_parametros")
+    }
 
 
     val projeto: Array[String] = for (projeto_2 <- parametrosDf.select("tabela_medida").collect()) yield {
@@ -109,7 +140,7 @@ STORED AS ORC TBLPROPERTIES ('orc.compress' = 'SNAPPY');
          |and dt_foto = '$var_data_foto'
          |and dt_processamento = date_format(current_date(),"yyyyMMdd")""".stripMargin).count()
 
-    println(duplicidade_data)
+    //println(duplicidade_data)
     var count = 0
     count = duplicidade_data.toInt
 
@@ -132,16 +163,19 @@ STORED AS ORC TBLPROPERTIES ('orc.compress' = 'SNAPPY');
       save_duplicidade.createOrReplaceTempView("coleta")
 
       spark.sql(s"create Table IF NOT EXISTS h_bigd_dq_db.dq_duplicados_medidas_aux_01_coletaDuplicidade_${database}_${table}_t  as select * from coleta")
+      log.info(s"salvando na tabela h_bigd_dq_db.dq_duplicados_medidas_aux_01_coletaDuplicidade_${database}_${table}_t")
+      log.info(s"${save_duplicidade.show(1)}")
 
     }
 
             }
   else {
-    println("tem partição " +ff )
-
+    log.info(s"partição encontrada ")
+    log.info(s"realizando drop table if exists h_bigd_dq_db.dq_duplicados_medidas_aux_01_coletaDuplicidade_${database}_${table}_t ")
 
   val dropDF = spark.sql(s"drop table if exists h_bigd_dq_db.dq_duplicados_medidas_aux_01_coletaDuplicidade_${database}_${table}_t")
 
+    log.info(s"executando query")
     val duplicateDF = spark.sql(
       s"""
 
@@ -205,6 +239,34 @@ left join (
    on C2.dt_foto = A2.dt_foto
     """)
 
+    log.info(s"salvando na tabela h_bigd_dq_db.dq_duplicados_medidas_aux_01_coletaDuplicidade_${database}_${table}_t")
+
+  }
+
+  } catch {
+    case  exception: AuthenticationException =>
+      log.error("Falha ao conectar no Hive.")
+      log.error(s"Tipo de Falha => ${exception.getStackTrace}")
+      log.error(exception.getMessage)
+      log.error(exception)
+
+    case exception: AnalysisException =>
+      log.error("Falha na execução da Query.")
+      log.error(s"Tipo de Falha => ${exception.getStackTrace}")
+      log.error(exception.getMessage)
+      log.error(exception)
+
+    case e: ClassCastException =>
+      log.error("Falha com os tipos dos dados da tabela.")
+      log.error(s"Tipo de Falha => ${e.getStackTrace}")
+      log.error(e.getMessage)
+      log.error(e)
+
+    case e: Exception =>
+      log.error("Falha Genérica.")
+      log.error(s"Tipo de Falha => ${e.getStackTrace}")
+      log.error(e.getMessage)
+      log.error(e)
 
   }
 

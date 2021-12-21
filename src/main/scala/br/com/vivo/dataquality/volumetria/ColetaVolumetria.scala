@@ -170,7 +170,6 @@ object ColetaVolumetria extends App {
         insertInto("h_bigd_dq_db.dq_volumetria_falhas")
 
       log.info(s"salvo na tabela h_bigd_dq_db.dq_volumetria_falhas")
-      log.info(save_df.schema)
 
       val volumetria_data = spark.sql(
         s"""

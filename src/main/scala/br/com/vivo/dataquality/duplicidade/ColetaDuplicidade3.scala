@@ -1,9 +1,10 @@
 package br.com.vivo.dataquality.duplicidade
 
+import org.apache.http.auth.AuthenticationException
 import org.apache.log4j.{Level, Logger}
 import org.apache.spark.SparkContext
 import org.apache.spark.SparkConf
-import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.{AnalysisException, SparkSession}
 //import org.apache.spark.sql.hive.HiveContext
 import org.apache.spark.sql.functions._
 
@@ -21,6 +22,8 @@ object ColetaDuplicidade3 extends App {
   Logger.getLogger("akka").setLevel(Level.OFF)
   Logger.getLogger("hive").setLevel(Level.OFF)
 
+  try{
+
   val spark = SparkSession
     .builder()
     .appName(s"Duplicidade_$table")
@@ -29,6 +32,12 @@ object ColetaDuplicidade3 extends App {
     .getOrCreate()
 
   log.info(s"Iniciando aplicação spark")
+
+  val applicationId: String = spark.sparkContext.applicationId
+
+  log.info(s"**********************************************************************************")
+  log.info(s"*** Application ID: $applicationId")
+  log.info(s"**********************************************************************************")
 
   val dropDF = spark.sql(s"drop table if exists h_bigd_dq_db.dq_duplicados_medidas_aux_01_coletaDuplicidade_${database}_${table}_t")
   log.info(s"drop table if exists h_bigd_dq_db.dq_duplicados_medidas_aux_01_coletaDuplicidade_${database}_${table}_t")
@@ -79,5 +88,34 @@ left join (
    on C2.dt_foto = A2.dt_foto
     """)
 
+  log.info(s"salvando na tabela h_bigd_dq_db.dq_duplicados_medidas_aux_01_coletaDuplicidade_${database}_${table}_t")
+
+
+  } catch {
+    case  exception: AuthenticationException =>
+      log.error("Falha ao conectar no Hive.")
+      log.error(s"Tipo de Falha => ${exception.getStackTrace}")
+      log.error(exception.getMessage)
+      log.error(exception)
+
+    case exception: AnalysisException =>
+      log.error("Falha na execução da Query.")
+      log.error(s"Tipo de Falha => ${exception.getStackTrace}")
+      log.error(exception.getMessage)
+      log.error(exception)
+
+    case e: ClassCastException =>
+      log.error("Falha com os tipos dos dados da tabela.")
+      log.error(s"Tipo de Falha => ${e.getStackTrace}")
+      log.error(e.getMessage)
+      log.error(e)
+
+    case e: Exception =>
+      log.error("Falha Genérica.")
+      log.error(s"Tipo de Falha => ${e.getStackTrace}")
+      log.error(e.getMessage)
+      log.error(e)
+
+  }
 
 }
