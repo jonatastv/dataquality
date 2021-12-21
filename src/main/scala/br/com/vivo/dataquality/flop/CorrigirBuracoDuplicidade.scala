@@ -101,8 +101,7 @@ object CorrigirBuracoDuplicidade extends App {
   }
 
   for( i <-  database.indices ){
-    println("value #" + i + " is " + database(i))
-    println("value #" + i + " is " + table(i))
+
 
     val partiton_df = spark.sql(s"show partitions ${database(i)}.${table(i)}").toDF("result")
 
@@ -120,11 +119,11 @@ object CorrigirBuracoDuplicidade extends App {
        end
        """).count()
 
-    println(ff)
+    //println(ff)
 
 
     if (ff == 0) {
-      println("não existe partição para essa dt_foto "+ff)
+     // println("não existe partição para essa dt_foto "+ff)
 
 
     }
@@ -277,7 +276,7 @@ left join (
            |""".stripMargin)
 
 
-      println("passou aqui!")
+     // println("passou aqui!")
 
 
       val duplicidade_corrigido = spark.sql(

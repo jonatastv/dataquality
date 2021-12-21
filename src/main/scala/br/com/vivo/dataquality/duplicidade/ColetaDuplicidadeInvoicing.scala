@@ -5,19 +5,26 @@ import org.apache.http.auth.AuthenticationException
 import org.apache.log4j.{Level, Logger}
 import org.apache.spark.sql.{AnalysisException, SparkSession}
 import org.apache.spark.sql.functions._
+import com.hortonworks.spark.sql.hive.llap.HiveWarehouseBuilder
 
 object ColetaDuplicidadeInvoicing extends  App {
 
   val database: String = args(0)
   val table: String = args(1)
+  val var_data_foto: String = args(2)
+  val var_nome_campo: String = args(3)
+  val var_formato_dt_foto: String = args(4)
+  val nome_tabela_tmp: String = args(5)
 
   @transient lazy val log: Logger = Logger.getLogger(getClass.getName)
-  log.setLevel(Level.INFO)
+//  log.setLevel(Level.INFO)
 
   log.info(s"Iniciando o processo")
   Logger.getLogger("org").setLevel(Level.OFF)
   Logger.getLogger("akka").setLevel(Level.OFF)
   Logger.getLogger("hive").setLevel(Level.OFF)
+  Logger.getLogger("com.hortonworks").setLevel(Level.OFF)
+  Logger.getLogger("com.qubole").setLevel(Level.OFF)
 
   try{
 
@@ -36,6 +43,11 @@ object ColetaDuplicidadeInvoicing extends  App {
     .enableHiveSupport()
     .getOrCreate()
 
+    val hive = com.hortonworks.spark.sql.hive.llap.HiveWarehouseBuilder.session(spark).build()
+    spark.conf.set("hive.tez.queue.name","Qualidade")
+    spark.conf.set("mapreduce.map.memory","5120")
+    spark.conf.set("mapreduce.reduce.memory","5120")
+
     log.info(s"Iniciando aplicação spark")
 
     val applicationId: String = spark.sparkContext.applicationId
@@ -44,15 +56,16 @@ object ColetaDuplicidadeInvoicing extends  App {
     log.info(s"*** Application ID: $applicationId")
     log.info(s"**********************************************************************************")
 
-  val dropDF = spark.sql(s"drop table if exists h_bigd_dq_db.dq_duplicados_medidas_aux_01_coletaDuplicidade_${database}_${table}_t")
-    log.info(s"drop table if exists h_bigd_dq_db.dq_duplicados_medidas_aux_01_coletaDuplicidade_${database}_${table}_t")
+    hive.dropTable(s"h_bigd_dq_db.${nome_tabela_tmp}", true, false)
+//  val dropDF = spark.sql(s"drop table if exists h_bigd_dq_db.dq_duplicados_medidas_aux_01_coletaDuplicidade_${database}_${table}_t")
+    log.info(s"drop table if exists h_bigd_dq_db.${nome_tabela_tmp}")
 
     log.info("Executando query")
-  val duplicateDF = spark.sql(
+  val duplicateDF = hive.executeQuery(
     s"""
 
-  create Table IF NOT EXISTS h_bigd_dq_db.dq_duplicados_medidas_aux_01_coletaDuplicidade_${database}_${table}_t
-  STORED AS ORC TBLPROPERTIES ('orc.compress' = 'SNAPPY') as
+ -- create Table IF NOT EXISTS h_bigd_dq_db.dq_duplicados_medidas_aux_01_coletaDuplicidade_${database}_${table}_t
+ -- STORED AS ORC TBLPROPERTIES ('orc.compress' = 'SNAPPY') as
 
 select
 A2.banco,
@@ -109,7 +122,24 @@ date_format(substring(C1.p_dataset_date,1,10),"yyyyMMdd")
    on C2.dt_foto = A2.dt_foto
   and C2.dt_processamento = A2.dt_processamento
     """)
-    log.info(s"salvando na tabela h_bigd_dq_db.dq_duplicados_medidas_aux_01_coletaDuplicidade_${database}_${table}_t")
+
+    hive.setDatabase(s"h_bigd_dq_db")
+    hive.createTable(s"${nome_tabela_tmp}").ifNotExists()
+      .column("banco", "string")
+      .column("tabela", "string")
+      .column("dt_foto", "string")
+      .column("dt_processamento", "string")
+      .column("qtde1", "bigint")
+      .column("qtde2", "bigint")
+      .column("diferenca", "bigint")
+      .create()
+
+    log.info(s"salvando na tabela h_bigd_dq_db.${nome_tabela_tmp}")
+
+    val tablename = s"h_bigd_dq_db.${nome_tabela_tmp}"
+    duplicateDF.write.mode("append").format("com.hortonworks.spark.sql.hive.llap.HiveWarehouseConnector").option("table",tablename).save()
+
+    log.info(s"Processo transformação do Hive completo")
 
   } catch {
 

@@ -5,11 +5,16 @@ import org.apache.log4j.{Level, Logger}
 import org.apache.spark.sql.{AnalysisException, SparkSession}
 import org.apache.spark.sql.functions._
 import org.apache.http.auth.AuthenticationException
+import com.hortonworks.spark.sql.hive.llap.HiveWarehouseBuilder
 
 object ColetaVolumetriaInvoicing extends  App {
 
   val database: String = args(0)
   val table: String = args(1)
+  val var_data_foto: String = args(2)
+  val var_nome_campo: String = args(3)
+  val var_formato_dt_foto: String = args(4)
+  val nome_tabela_tmp: String = args(5)
 
   @transient lazy val log: Logger = Logger.getLogger(getClass.getName)
   log.setLevel(Level.INFO)
@@ -18,6 +23,8 @@ object ColetaVolumetriaInvoicing extends  App {
   Logger.getLogger("org").setLevel(Level.OFF)
   Logger.getLogger("akka").setLevel(Level.OFF)
   Logger.getLogger("hive").setLevel(Level.OFF)
+  Logger.getLogger("com.hortonworks").setLevel(Level.OFF)
+  Logger.getLogger("com.qubole").setLevel(Level.OFF)
 
   try{
 
@@ -27,6 +34,11 @@ object ColetaVolumetriaInvoicing extends  App {
     .config("spark.sql.broadcastTimeout", "36000")
     .enableHiveSupport()
     .getOrCreate()
+
+    val hive = com.hortonworks.spark.sql.hive.llap.HiveWarehouseBuilder.session(spark).build()
+    spark.conf.set("hive.tez.queue.name","Qualidade")
+    spark.conf.set("mapreduce.map.memory","5120")
+    spark.conf.set("mapreduce.reduce.memory","5120")
 
   log.info(s"Iniciando aplicação spark")
 
@@ -52,8 +64,9 @@ object ColetaVolumetriaInvoicing extends  App {
 
   for( i <-  projeto.indices ) {
 
+    hive.dropTable(s"h_bigd_dq_db.${nome_tabela_tmp}", true, false)
 
-  val tabela = spark.sql(
+  val tabela = hive.executeQuery(
     s"""
        |select
        |'${database}' as banco,
@@ -71,41 +84,59 @@ object ColetaVolumetriaInvoicing extends  App {
        | ) as A2
        |""".stripMargin).toDF()
 
-  //val tabela = spark.sql(s"""select p_dataset_date , date_format(substring(p_dataset_date,1,10),"yyyyMMdd")  from ${database}.${table}""")
-    log.info(s"${tabela.show(1)}")
+
+    hive.setDatabase(s"h_bigd_dq_db")
+    hive.createTable(s"${nome_tabela_tmp}").ifNotExists()
+      .column("banco", "string")
+      .column("tabela", "string")
+      .column("dt_foto", "string")
+      .column("dt_processamento", "string")
+      .column("qtde_registros", "bigint")
+      .column("fonte", "string")
+      .create()
+
+
+    log.info(s"salvando tabela h_bigd_dq_db.${nome_tabela_tmp}")
+
+    val tablename = s"h_bigd_dq_db.${nome_tabela_tmp}"
+    tabela.write.mode("append").format("com.hortonworks.spark.sql.hive.llap.HiveWarehouseConnector").option("table",tablename).save()
+
+    log.info(s"Processo transformação do Hive completo")
+
+
+    //val tabela = spark.sql(s"""select p_dataset_date , date_format(substring(p_dataset_date,1,10),"yyyyMMdd")  from ${database}.${table}""")
+//    log.info(s"${tabela.show(1)}")
 
   // System.exit(1)
 
 
-  val volumetria_medidas = spark.table(s"h_bigd_dq_db.dq_volumetria_medidas${projeto(i)}").as("A")
-    .select("A.banco","A.tabela","A.dt_foto","A.dt_processamento","A.qtde_registros")
-    .where(s"""concat(A.banco, A.tabela,  A.dt_processamento) <> concat('${database}','${table}', date_format(current_date(),"yyyyMMdd") )""")
-    .withColumn("fonte",lit(1))
-    .unionAll(
-      tabela.select(
-        tabela.col("banco"),
-        tabela.col("tabela"),
-        tabela.col("dt_foto"),
-        tabela.col("dt_processamento"),
-        tabela.col("qtde_registros"),
-        tabela.col("fonte")
-      )
-    )
-    .dropDuplicates
-    .orderBy("banco","tabela","dt_foto","dt_processamento")
+//  val volumetria_medidas = spark.table(s"h_bigd_dq_db.dq_volumetria_medidas${projeto(i)}").as("A")
+//    .select("A.banco","A.tabela","A.dt_foto","A.dt_processamento","A.qtde_registros")
+//    .where(s"""concat(A.banco, A.tabela,  A.dt_processamento) <> concat('${database}','${table}', date_format(current_date(),"yyyyMMdd") )""")
+//    .withColumn("fonte",lit(1))
+//    .unionAll(
+//      tabela.select(
+//        tabela.col("banco"),
+//        tabela.col("tabela"),
+//        tabela.col("dt_foto"),
+//        tabela.col("dt_processamento"),
+//        tabela.col("qtde_registros"),
+//        tabela.col("fonte")
+//      )
+//    )
+//    .dropDuplicates
+//    .orderBy("banco","tabela","dt_foto","dt_processamento")
 
-    log.info("carregando unionAll")
 
-  volumetria_medidas.createOrReplaceTempView("volumetria_medidas")
-  val final_medidas = spark.sql(
-    s"""
-       |-- create Table IF NOT EXISTS h_bigd_dq_db.dq_volumetria_medidas${projeto(i)}
-       |-- STORED AS ORC TBLPROPERTIES ('orc.compress' = 'SNAPPY') as
-       |insert overwrite table h_bigd_dq_db.dq_volumetria_medidas${projeto(i)}
-       |select  * from volumetria_medidas""".stripMargin)
 
-    log.info(s"INSERT OVERWRITE TABLE h_bigd_dq_db.dq_volumetria_medidas${projeto(i)}")
-    log.info(s"Processo transformação do Hive completo")
+//  volumetria_medidas.createOrReplaceTempView("volumetria_medidas")
+//  val final_medidas = spark.sql(
+//    s"""
+//       |-- create Table IF NOT EXISTS h_bigd_dq_db.dq_volumetria_medidas${projeto(i)}
+//       |-- STORED AS ORC TBLPROPERTIES ('orc.compress' = 'SNAPPY') as
+//       |insert overwrite table h_bigd_dq_db.dq_volumetria_medidas${projeto(i)}
+//       |select  * from volumetria_medidas""".stripMargin)
+
 
   }
 

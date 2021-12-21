@@ -100,8 +100,8 @@ val s = ""
 */
 
   for( wi <-  database.indices ){
-    println("value #" + wi + " is " + database(wi))
-    println("value #" + wi + " is " + table(wi))
+   // println("value #" + wi + " is " + database(wi))
+  //  println("value #" + wi + " is " + table(wi))
 
 
     val partiton_df = spark.sql(s"show partitions ${database(wi)}.${table(wi)}").toDF("result")
@@ -120,10 +120,10 @@ val s = ""
        end
        """).count()
 
-    println(ff)
+    //println(ff)
 
     if (ff == 0) {
-      println("não existe partição para essa dt_foto "+ff)
+      //println("não existe partição para essa dt_foto "+ff)
 
 
     }
@@ -189,7 +189,7 @@ val s = ""
            |insert overwrite table h_bigd_dq_db.dq_volumetria_medidas${projetos}
            |select  * from volumetria_medidas""".stripMargin)
 
-      println("passou aqui!")
+
       val volumetria_corrigido = spark.sql(
         s"""
            |select

@@ -17,6 +17,7 @@ object ColetaDuplicidadeNext extends  App {
   val var_data_foto: String = args(2)
   val var_nome_campo: String = args(3)
   val var_formato_dt_foto: String = args(4)
+  val nome_tabela_tmp: String = args(5)
 
   @transient lazy val log: Logger = Logger.getLogger(getClass.getName)
   log.setLevel(Level.INFO)
@@ -25,6 +26,8 @@ object ColetaDuplicidadeNext extends  App {
   Logger.getLogger("org").setLevel(Level.OFF)
   Logger.getLogger("akka").setLevel(Level.OFF)
   Logger.getLogger("hive").setLevel(Level.OFF)
+  Logger.getLogger("com.hortonworks").setLevel(Level.OFF)
+  Logger.getLogger("com.qubole").setLevel(Level.OFF)
 
   try{
 
@@ -61,6 +64,12 @@ STORED AS ORC TBLPROPERTIES ('orc.compress' = 'SNAPPY');
   //try {
 
     log.info(s"Verificando se existe partição")
+
+    val hive = com.hortonworks.spark.sql.hive.llap.HiveWarehouseBuilder.session(spark).build()
+    spark.conf.set("hive.tez.queue.name","Qualidade")
+    spark.conf.set("mapreduce.map.memory","5120")
+    spark.conf.set("mapreduce.reduce.memory","5120")
+
     val partiton_df = spark.sql(s"show partitions ${database}.${table}").toDF("result")
 
     //partiton_df.orderBy(desc("result")).show()
@@ -92,11 +101,15 @@ STORED AS ORC TBLPROPERTIES ('orc.compress' = 'SNAPPY');
            |'0' as status
            |""".stripMargin)
 
-      save_df.
-        write.
-        mode("append").
-        format("orc").
-        insertInto("h_bigd_dq_db.dq_duplicidade_falhas")
+//      save_df.
+//        write.
+//        mode("append").
+//        format("orc").
+//        insertInto("h_bigd_dq_db.dq_duplicidade_falhas")
+
+      val falhas = "h_bigd_dq_db.dq_duplicidade_falhas2"
+
+      save_df.write.mode("append").format("com.hortonworks.spark.sql.hive.llap.HiveWarehouseConnector").option("table",falhas).save()
 
       log.info(s"salvando na tabela h_bigd_dq_db.dq_duplicidade_falhas")
 
@@ -126,7 +139,7 @@ STORED AS ORC TBLPROPERTIES ('orc.compress' = 'SNAPPY');
       }
 
 
-      val duplicidade_data = spark.sql(
+      val duplicidade_data = hive.executeQuery(
         s"""
            |select qtde1
            |from h_bigd_dq_db.dq_duplicados_medidas${projetos}
@@ -135,13 +148,14 @@ STORED AS ORC TBLPROPERTIES ('orc.compress' = 'SNAPPY');
            |and dt_foto = '$var_data_foto'
            |and dt_processamento = date_format(current_date(),"yyyyMMdd")""".stripMargin).count()
 
-      println(duplicidade_data)
+      //println(duplicidade_data)
       var count = 0
       count = duplicidade_data.toInt
 
       if (count == 0) {
 
-        spark.sql(s"drop table if exists h_bigd_dq_db.dq_duplicados_medidas_aux_01_coletaDuplicidade_${database}_${table}_t")
+        hive.dropTable(s"h_bigd_dq_db.${nome_tabela_tmp}", true, false)
+//        spark.sql(s"drop table if exists h_bigd_dq_db.dq_duplicados_medidas_aux_01_coletaDuplicidade_${database}_${table}_t")
 
         val save_duplicidade = spark.sql(
           s"""
@@ -155,27 +169,26 @@ STORED AS ORC TBLPROPERTIES ('orc.compress' = 'SNAPPY');
              |1 as fonte
              |""".stripMargin)
 
-        save_duplicidade.createOrReplaceTempView("coleta")
-
-        spark.sql(s"create Table IF NOT EXISTS h_bigd_dq_db.dq_duplicados_medidas_aux_01_coletaDuplicidade_${database}_${table}_t  as select * from coleta")
-
-        log.info(s"salvando na tabela h_bigd_dq_db.dq_duplicados_medidas_aux_01_coletaDuplicidade_${database}_${table}_t")
-        log.info(s"${save_duplicidade.show(1)}")
+        val coleta = s"h_bigd_dq_db.${nome_tabela_tmp}"
+        save_duplicidade.write.mode("append").format("com.hortonworks.spark.sql.hive.llap.HiveWarehouseConnector").option("table",coleta).save()
+        log.info(s"salvando na tabela h_bigd_dq_db.${nome_tabela_tmp}")
       }
 
     }
     else {
       log.info(s"partição encontrada ")
-      log.info(s"realizando drop table if exists h_bigd_dq_db.dq_duplicados_medidas_aux_01_coletaDuplicidade_${database}_${table}_t ")
+      log.info(s"realizando drop table if exists h_bigd_dq_db.${nome_tabela_tmp} ")
 
-      val dropDF = spark.sql(s"drop table if exists h_bigd_dq_db.dq_duplicados_medidas_aux_01_coletaDuplicidade_${database}_${table}_t")
 
+      hive.dropTable(s"h_bigd_dq_db.${nome_tabela_tmp}", true, false)
       log.info(s"executando query")
-      val duplicateDF = spark.sql(
+      spark.conf.set("spark.sql.crossJoin.enabled", "true")
+
+      val duplicateDF = hive.executeQuery(
         s"""
 
-  create Table IF NOT EXISTS h_bigd_dq_db.dq_duplicados_medidas_aux_01_coletaDuplicidade_${database}_${table}_t
-  STORED AS ORC TBLPROPERTIES ('orc.compress' = 'SNAPPY') as
+ -- create Table IF NOT EXISTS h_bigd_dq_db.dq_duplicados_medidas_aux_01_coletaDuplicidade_${database}_${table}_t
+ -- STORED AS ORC TBLPROPERTIES ('orc.compress' = 'SNAPPY') as
 
 select
 A2.banco,
@@ -235,7 +248,24 @@ left join (
    on C2.dt_foto = A2.dt_foto
     """)
 
-      log.info(s"salvando na tabela h_bigd_dq_db.dq_duplicados_medidas_aux_01_coletaDuplicidade_${database}_${table}_t")
+
+      log.info(s"salvando na tabela h_bigd_dq_db.${nome_tabela_tmp}")
+
+      hive.setDatabase(s"h_bigd_dq_db")
+      hive.createTable(s"${nome_tabela_tmp}").ifNotExists()
+        .column("banco", "string")
+        .column("tabela", "string")
+        .column("dt_foto", "string")
+        .column("dt_processamento", "string")
+        .column("qtde1", "bigint")
+        .column("qtde2", "bigint")
+        .column("diferenca", "bigint")
+        .create()
+
+      val tablename = s"h_bigd_dq_db.${nome_tabela_tmp}"
+      duplicateDF.write.mode("append").format("com.hortonworks.spark.sql.hive.llap.HiveWarehouseConnector").option("table",tablename).save()
+
+      log.info(s"Processo transformação do Hive completo")
     }
 
     } catch {
